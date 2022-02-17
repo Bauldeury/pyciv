@@ -1,0 +1,22 @@
+key;name;hammerCost;purchaseCost;maintenance;requires;obsoletedBy
+AQUEDUCT;aqueduct;50;150;1;;
+BANK;bank;50;150;1;;
+BARRACKS;barracks;40;160;0;;
+CATHEDRAL;cathedral;50;150;1;;
+CITY_WALLS;city walls;50;150;1;;
+COLOSSEUM;colosseum;50;150;1;;
+COURTHOUSE;courthouse;50;150;1;;
+FACTORY;factory;50;150;1;;
+GRANARY;granary;50;150;1;;
+HYDRO_PLANT;hydro plant;50;150;1;;
+LIBRARY;library;50;150;1;;
+MARKETPLACE;marketplace;50;150;1;;
+MASS TRANSIT;mass transit;50;150;1;;
+MFG_PLANT;mfg plant;50;150;1;;
+NUCLEAR_PLANT;nuclear plant;50;150;1;;
+PALACE;palace;50;150;1;;
+POWER_PLANT;power plant;50;150;1;;
+ RECYCLING_CENTER;recycling center;50;150;1;;
+SDI_DEFENSE;sdi defense;50;150;1;;
+TEMPLE;temple;50;150;1;;
+UNIVERSITY;university;50;150;1;;

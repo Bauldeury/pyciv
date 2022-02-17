@@ -4,9 +4,12 @@ class _building:
         self.hammerCost = 50
         self.purchaseCost = 150
         self.maintenance = 1
+        self.requires = None
+        self.obsoletedBy = None
 
 #keys = {"AQUEDUCT","BANK","BARRACKS","CATHEDRAL","CITY WALLS","COLOSSEUM","COURTHOUSE","FACTORY","GRANARY","HYDRO PLANT", "LIBRARY", "MARKETPLACE","MASS TRANSIT","MFG PLANT", "NUCLEAR PLANT", "PALACE", "POWER PLANT", "RECYCLING CENTER", "SDI DEFENSE","TEMPLE","UNIVERSITY"}
 _dico = {}
+
 
 def _loadDictionnary():
 
@@ -16,6 +19,9 @@ def _loadDictionnary():
     barracks.purchaseCost = 160
     barracks.maintenance = 0
     _dico["BARRACKS"] = barracks
+    
+def _loadSpecials():
+    pass
 
 def getFoodProduction(key_set):
     output = 0
@@ -34,3 +40,4 @@ def getBuildables(key_set):
     return output
 
 _loadDictionnary()
+_loadSpecials()
