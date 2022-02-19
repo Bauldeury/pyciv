@@ -10,7 +10,6 @@ class _building:
         self.requires = None
         self.obsoletedBy = None
 
-#keys = {"AQUEDUCT","BANK","BARRACKS","CATHEDRAL","CITY WALLS","COLOSSEUM","COURTHOUSE","FACTORY","GRANARY","HYDRO PLANT", "LIBRARY", "MARKETPLACE","MASS TRANSIT","MFG PLANT", "NUCLEAR PLANT", "PALACE", "POWER PLANT", "RECYCLING CENTER", "SDI DEFENSE","TEMPLE","UNIVERSITY"}
 _dico = {}
 _specials = {}
 
@@ -22,17 +21,29 @@ def _loadDictionnary():
             if row[0] != "key":
                 bld = _building()
                 bld.name = row[1]
+                bld.description = row [2]
                 bld.hammerCost = row[3]
                 bld.purchaseCost = row[4]
                 bld.maintenance = row[5]
                 bld.requires = (None if row[6] == '' else row[6])
                 bld.obsoletedBy = (None if row[7] == '' else row[7])
-                
                 _dico[row[0]] = bld
-            pass
+            
     
 def _loadSpecials():
-    pass
+    with open("buildings_specials.csv", newline ="") as csvfile:
+        reader = csv.reader(csvfile, delimiter=';')
+        for row in reader:
+            if row[0] != "buildingKey":
+                key = row[1]
+                values = [row[0]]
+                if row[2] != "":
+                    values.append(row[2])
+                if row[3] != "":
+                    values.append(row[3])
+                
+                _dico[key] = values
+            
 
 def getFoodProduction(key_set):
     output = 0
