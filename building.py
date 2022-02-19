@@ -42,7 +42,7 @@ def _loadSpecials():
                 if row[3] != "":
                     values.append(row[3])
                 
-                _dico[key] = values
+                _specials[key] = values
             
 
 def getFoodProduction(key_set):
