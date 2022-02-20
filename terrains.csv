@@ -1,2 +1,13 @@
-key;name;foodYield;productionYield;commerceYield;travelCost;defensiveBonus;availableResources
-GRASSLAND;grassland;2;0;0;1;0;SHEEP,WHEAT
+key;name;description;foodYield;productionYield;commerceYield;travelCost;defensiveBonus;availableResources;isMaritime
+GRASSLAND;grassland;GRASSLAND_DESCRIPTION;2;0;0;1;0;SHEEP,WHEAT;no
+ARCTIC;arctic;ARCTIC_DESCRIPTION;0;0;0;2;0;SEALS;no
+DESERT;desert;DESERT_DESCRIPTION;0;1;0;1;0;OASIS;no
+FOREST;forest;FOREST_DESCRIPTION;1;2;0;2;50;GAME;no
+HILLS;hills;HILLS_DESCRIPTION;1;0;0;2;100;COAL;no
+JUNGLE;jungle;JUNGLE_DESCRIPTION;1;0;0;2;50;GEMS;no
+MOUNTAIN;mountain;MOUNTAIN_DESCRIPTION;0;1;0;3;200;GOLD;no
+OCEAN;ocean;OCEAN_DESCRIPTION;1;0;2;1;0;FISH;yes
+PLAINS;plains;PLAINS_DESCRIPTION;1;1;0;1;0;HORSE;no
+RIVER;river;RIVER_DESCRIPTION;2;0;1;1;50;CLAY;no
+SWAMP;swamp;SWAMP_DESCRIPTION;1;0;0;2;50;OIL;no
+TUNDRA;tundra;TUNDRA_DESCRIPTION;1;0;0;1;0;GAME;no

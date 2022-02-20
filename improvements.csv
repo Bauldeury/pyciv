@@ -1,0 +1,2 @@
+terrain;key;name;description;requires;constraints;layer;workAmount;specials
+PLAINS;IRRIGATION;irrigation;IRRIGATION_DESCRIPTION;POTTERY;NEED_WATER;1;50;PROPAGATE_WATER,FOOD_YIELD,1

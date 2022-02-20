@@ -1,3 +1,13 @@
-key;name;foodYield;productionYield;commerceYield
-SHEEP;sheep;0;1;0
-WHEAT;wheat;2;0;0
+key;name;description;foodYield;productionYield;commerceYield;isTradable
+SHEEPS;sheeps;SHEEPS_DESCRIPTION;0;1;0;yes
+WHEAT;wheat;WHEAT_DESCRIPTION;2;0;0;yes
+SEALS;seals;SEALS_DESCRIPTION;2;0;0;yes
+OASIS;oasis;OASIS_DESCRIPTION;3;0;0;no
+GAME;game;GAME_DESCRIPTION;2;0;0;yes
+COAL;coal;COAL_DESCRIPTION;0;2;0;yes
+GEMS;gems;GEMS_DESCRIPTION;0;0;4;yes
+GOLD;gold;GOLD_DESCRIPTION;0;0;6;yes
+FISH;fish;FISH_DESCRIPTION;2;0;0;yes
+HORSES;horses;HORSES_DESCRIPTION;0;2;0;yes
+CLAY;clay;CLAY_DESCRIPTION;0;1;0;yes
+OIL;oil;OIL_DESCRIPTION;0;4;0;yes
