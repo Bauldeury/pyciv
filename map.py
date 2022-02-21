@@ -9,21 +9,24 @@ class _terrain:
         self.commerceYield = 0
         self.travelCost = 1
         self.defensiveBonus = 0
-        self.availableResources = set()
+        self.availableFeatures = set()
         self.isMaritime = False
 
-class _resource:
+class _feature:
     def __init__(self):
-        self.name = "ResourceName"
-        self.description = "ResourceDescription"
-        self.foodYield = 0
-        self.productionYield = 0
-        self.commerceYield = 0
-        self.isTradable = True
+        self.name = "FeatureName"
+        self.description = "FeatureDescription"
+        self.terrain = None
+        self.requires = None
+        self.constraints = None
+        self.ftype = 0 #0 for natural features, 1 for resources, 2 for roads, 3 for other improvements
+        self.workAmount = 50
+        self.specials = None
+
 
 
 _terrains = {}
-_resources = {}
+_features = {}
 
 def _loadTerrains():
     with open("terrains.csv", newline ="") as csvfile:
@@ -38,29 +41,22 @@ def _loadTerrains():
                 t.commerceYield = row[5]
                 t.travelCost = row[6]
                 t.defensiveBonus = row[7]
-                t.availableResources = row[8].split(',')
+                t.availableFeatures = row[8].split(',')
                 t.isMaritime = (row[9]=="yes")
                 _terrains[row[0]] = t
                 
-def _loadResources():
-    with open("resources.csv", newline ="") as csvfile:
+def _loadFeatures():
+    with open("features.csv", newline ="") as csvfile:
         reader = csv.reader(csvfile, delimiter=';')
         for row in reader:
             if row[0] != "key":
-                r = _resource()
-                r.name = row[1]
-                r.description = row[2]
-                r.foodYield = row[3]
-                r.productionYield = row[4]
-                r.commerceYield = row[5]
-                r.isTradable = (row[6]=="yes")
-                _resources[row[0]] = r
+                f = _feature()
+                _features[row[0]] = f
     
 class tile:
     def __init__(self):
         self.terrain = _terrains["GRASSLAND"]
-        self.resources = None
-        self.improvements = None
+        self.features = None
         
            
     @property
@@ -75,16 +71,11 @@ class tile:
     def travelCost(self):
         return self.terrain.travelCost
             
-    # @travelCost.setter       
-    # def travelCost(self,value):
-        # print("travelCost is read-only")
         
     @property
     def foodYield(self):
         output = self.terrain.foodYield
         
-        if self.resources != None:
-            output+= sum(x.foodYield for x in self.resource)
             
         im = self.improvements
         if im != None:
@@ -95,42 +86,14 @@ class tile:
            
     @property
     def productionYield(self):
-        output = self.terrain.productionYield
-        
-        if self.resources != None:
-            output+= sum(x.productionYield for x in self.resource)
-            
-        im = self.improvements
-        if im != None:
-            if "PRODUCTION_YIELD" in im:
-                output += im[im.index("PRODUCTION_YIELD")+1]
-                
-        return output
+        return 1
            
     @property
     def commerceYield(self):
-        output = self.terrain.commerceYield
-        
-        if self.resources != None:
-            output+= sum(x.commerceYield for x in self.resource)
-            
-        im = self.improvements
-        if im != None:
-            if "COMMERCE_YIELD" in im:
-                output += im[im.index("COMMERCE_YIELD")+1]
-                
-        return output
+        return 1
            
     @property
-    def defensiveBonus(self):
-        output = self.terrain.defensiveBonus
-        
-        im = self.improvements
-        if im != None:
-            if "DEFENSIVE_BONUS" in im:
-                output += im[im.index("DEFENSIVE_BONUS")+1]
-                
-        return output
+        return 1
            
     @property
     def isMaritime(self):
@@ -150,4 +113,4 @@ class map:
                 self.tiles[(x,y)] = tile()
         
 _loadTerrains()
-_loadResources()
+# _loadResources()
