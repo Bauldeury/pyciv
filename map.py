@@ -76,11 +76,11 @@ class tile:
     def foodYield(self):
         output = self.terrain.foodYield
         
-            
-        im = self.improvements
-        if im != None:
-            if "FOOD_YIELD" in im:
-                output += im[im.index("FOOD_YIELD")+1]
+        if self.features != None:
+            for ft in self.features:
+                if ft.specials != None :
+                    if "FOOD_YIELD" in ft.specials:
+                        output += ft[ft.index("FOOD_YIELD")+1]
                 
         return output
            
@@ -93,6 +93,7 @@ class tile:
         return 1
            
     @property
+    def defensiveBonus(self):
         return 1
            
     @property
