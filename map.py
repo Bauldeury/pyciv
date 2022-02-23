@@ -51,6 +51,14 @@ def _loadFeatures():
         for row in reader:
             if row[0] != "key":
                 f = _feature()
+                f.terrain = row[1] if row[1] != "" else None
+                f.name = row[2]
+                f.description = row[3]
+                f.requires = row[4] if row[4] != "" else None
+                f.constraints = row[5].split(',') if row[5] != "" else None
+                f.ftype = row[6] #0 for natural features, 1 for resources, 2 for roads, 3 for other improvements
+                f.workAmount = row[7]
+                f.specials = row[8].split(',') if row[8] != "" else None
                 _features[row[0]] = f
     
 class tile:
