@@ -13,6 +13,15 @@ del t
 
 print()
 print("FEATURE TEST: RAILROAD")
-# f = 1
-# printInstance(f)
-# del f
+f = map._features[("RAILROAD","DESERT")]
+printInstance(f)
+del f
+
+print()
+print("TILE TEST: PLAINS, ROAD then overwrite with RAILROAD")
+t = map.tile()
+t.terrain = map._terrains["PLAINS"]
+t.addFeature("ROAD")
+t.addFeature("RAILROAD")
+printInstance(t)
+del t

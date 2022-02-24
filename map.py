@@ -2,6 +2,7 @@ import csv
 
 class _terrain:
     def __init__(self):
+        self.key = "TERRAIN_KEY"
         self.name = "TerrainName"
         self.description = "TerrainDescription"
         self.foodYield = 0
@@ -14,9 +15,9 @@ class _terrain:
 
 class _feature:
     def __init__(self):
+        self.key = ("FEATURE_KEY","TERRAIN_KEY")
         self.name = "FeatureName"
         self.description = "FeatureDescription"
-        # self.terrain = None
         self.requires = None
         self.constraints = None
         self.ftype = 0 #0 for natural features, 1 for resources, 2 for roads, 3 for other improvements
@@ -34,6 +35,7 @@ def _loadTerrains():
         for row in reader:
             if row[0] != "key":
                 t = _terrain()
+                t.key = row[0]
                 t.name = row[1]
                 t.description = row[2]
                 t.foodYield = row[3]
@@ -43,7 +45,7 @@ def _loadTerrains():
                 t.defensiveBonus = row[7]
                 t.availableFeatures = row[8].split(',')
                 t.isMaritime = (row[9]=="yes")
-                _terrains[row[0]] = t
+                _terrains[t.key] = t
                 
 def _loadFeatures():
     with open("features.csv", newline ="") as csvfile:
@@ -51,7 +53,7 @@ def _loadFeatures():
         for row in reader:
             if row[0] != "key":
                 f = _feature()
-                # f.terrain = row[1] if row[1] != "" else None
+                f.key =(row[0],row[1] if row[1]!="" else None)
                 f.name = row[2]
                 f.description = row[3]
                 f.requires = row[4] if row[4] != "" else None
@@ -59,12 +61,28 @@ def _loadFeatures():
                 f.ftype = row[6] #0 for natural features, 1 for resources, 2 for roads, 3 for other improvements
                 f.workAmount = row[7]
                 f.specials = row[8].split(',') if row[8] != "" else None
-                _features[(row[0],row[1] if row[1]!="" else None)] = f
+                _features[f.key] = f
     
 class tile:
     def __init__(self):
         self.terrain = _terrains["GRASSLAND"]
         self.features = None
+        
+    def addFeature(self,featureKey1):
+        bigKey = (featureKey1,self.terrain.key)
+        if bigKey in _features:
+            newFeature = _features[bigKey]
+            if self.features == None:
+                self.features = {newFeature.ftype:newFeature}
+            else:
+                self.features[newFeature.ftype] = newFeature
+    
+    def removeFeature(self,ftype):
+        if self.features != None:
+            self.features.pop(ftype)
+            if len(self.features) == 0:
+                del self.features
+                self.features = None
         
            
     @property
