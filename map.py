@@ -12,6 +12,9 @@ class _terrain:
         self.defensiveBonus = 0
         self.availableFeatures = set()
         self.isMaritime = False
+        
+    def __repr__(self):
+        return "C_TERRAIN:{}".format(self.key)
 
 class _feature:
     def __init__(self):
@@ -23,6 +26,9 @@ class _feature:
         self.ftype = 0 #0 for natural features, 1 for resources, 2 for roads, 3 for other improvements
         self.workAmount = 50
         self.specials = None
+    
+    def __repr__(self):
+        return "C_FEATURE:{}".format(self.key)
 
 
 
@@ -38,11 +44,11 @@ def _loadTerrains():
                 t.key = row[0]
                 t.name = row[1]
                 t.description = row[2]
-                t.foodYield = row[3]
-                t.productionYield = row[4]
-                t.commerceYield = row[5]
-                t.travelCost = row[6]
-                t.defensiveBonus = row[7]
+                t.foodYield = float(row[3])
+                t.productionYield = float(row[4])
+                t.commerceYield = float(row[5])
+                t.travelCost = float(row[6])
+                t.defensiveBonus = int(row[7])
                 t.availableFeatures = row[8].split(',')
                 t.isMaritime = (row[9]=="yes")
                 _terrains[t.key] = t
@@ -58,8 +64,8 @@ def _loadFeatures():
                 f.description = row[3]
                 f.requires = row[4] if row[4] != "" else None
                 f.constraints = row[5].split(',') if row[5] != "" else None
-                f.ftype = row[6] #0 for natural features, 1 for resources, 2 for roads, 3 for other improvements
-                f.workAmount = row[7]
+                f.ftype = int(row[6]) #0 for natural features, 1 for resources, 2 for roads, 3 for other improvements
+                f.workAmount = int(row[7]) if row[7] != "" else None
                 f.specials = row[8].split(',') if row[8] != "" else None
                 _features[f.key] = f
     
@@ -68,10 +74,44 @@ class tile:
         self.terrain = _terrains["GRASSLAND"]
         self.features = None
         
+    def getSpecialExists(self,special):
+        if self.features == None:
+            return False
+        else:
+            fts = self.features
+            for i in fts:
+                if fts[i].specials != None :
+                    if special in fts[i].specials:
+                        output = True
+        return False
+                        
+    def getSpecialValueSum(self,special):
+        if self.features == None:
+            return 0
+        else:
+            output = 0
+            fts = self.features
+            for i_ft in fts:
+                sps = fts[i_ft].specials
+                if sps != None:
+                    for i_sp in range(len(sps)-1):
+                        if special == sps[i_sp]:
+                            output += float(sps[i_sp+1])
+ 
+            return output
+        
+        
     def addFeature(self,featureKey1):
         bigKey = (featureKey1,self.terrain.key)
+        semiKey = (featureKey1,None)
+        newFeature = None
+        
         if bigKey in _features:
-            newFeature = _features[bigKey]
+            newFeature = _features[bigKey]   
+        elif semiKey in _features:
+            newFeature = _features[semiKey]
+        
+        if newFeature != None:
             if self.features == None:
                 self.features = {newFeature.ftype:newFeature}
             else:
@@ -95,32 +135,24 @@ class tile:
         
     @property
     def travelCost(self):
-        return self.terrain.travelCost
-            
-        
+        overwrite = self.getSpecialValueSum("SET_MOVEMENT_COST")
+        return self.terrain.travelCost if overwrite == 0 else overwrite
+              
     @property
     def foodYield(self):
-        output = self.terrain.foodYield
-        
-        if self.features != None:
-            for ft in self.features:
-                if ft.specials != None :
-                    if "FOOD_YIELD" in ft.specials:
-                        output += ft[ft.index("FOOD_YIELD")+1]
-                
-        return output
+        return self.terrain.foodYield + self.getSpecialValueSum("FOOD_YIELD")
            
     @property
     def productionYield(self):
-        return 1
+        return self.terrain.productionYield + self.getSpecialValueSum("PRODUCTION_YIELD")
            
     @property
     def commerceYield(self):
-        return 1
+        return self.terrain.commerceYield + self.getSpecialValueSum("COMMERCE_YIELD")
            
     @property
     def defensiveBonus(self):
-        return 1
+        return self.terrain.defensiveBonus + self.getSpecialValueSum("DEFENSIVE_BONUS")
            
     @property
     def isMaritime(self):
