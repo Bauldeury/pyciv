@@ -87,9 +87,9 @@ class tile:
                         
     def getSpecialValueSum(self,special):
         if self.features == None:
-            return 0
+            return 0.0
         else:
-            output = 0
+            output = 0.0
             fts = self.features
             for i_ft in fts:
                 sps = fts[i_ft].specials
@@ -97,7 +97,20 @@ class tile:
                     for i_sp in range(len(sps)-1):
                         if special == sps[i_sp]:
                             output += float(sps[i_sp+1])
- 
+            return output
+
+    def getSpecialValueProduct(self,special):
+        if self.features == None:
+            return 1.0
+        else:
+            output = 1.0
+            fts = self.features
+            for i_ft in fts:
+                sps = fts[i_ft].specials
+                if sps != None:
+                    for i_sp in range(len(sps)-1):
+                        if special == sps[i_sp]:
+                            output *= float(sps[i_sp+1])
             return output
         
         
@@ -140,15 +153,21 @@ class tile:
               
     @property
     def foodYield(self):
-        return self.terrain.foodYield + self.getSpecialValueSum("FOOD_YIELD")
+        output = self.terrain.foodYield + self.getSpecialValueSum("FOOD_YIELD")
+        output *= self.getSpecialValueProduct("ALL_MULTIPLIER")
+        return int(output)
            
     @property
     def productionYield(self):
-        return self.terrain.productionYield + self.getSpecialValueSum("PRODUCTION_YIELD")
+        output = self.terrain.foodYield + self.getSpecialValueSum("PRODUCTION_YIELD")
+        output *= self.getSpecialValueProduct("ALL_MULTIPLIER")
+        return int(output)
            
     @property
     def commerceYield(self):
-        return self.terrain.commerceYield + self.getSpecialValueSum("COMMERCE_YIELD")
+        output = self.terrain.foodYield + self.getSpecialValueSum("COMMERCE_YIELD")
+        output *= self.getSpecialValueProduct("ALL_MULTIPLIER")
+        return int(output)
            
     @property
     def defensiveBonus(self):
