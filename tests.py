@@ -1,4 +1,8 @@
 import map
+import city
+import building
+import unit
+
 import csv
 
 def printInstance(ins):

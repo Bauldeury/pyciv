@@ -1,6 +1,7 @@
 import map
 import city
 import building
+import unit
 
 turn = 0
 cities = []

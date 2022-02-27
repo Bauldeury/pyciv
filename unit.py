@@ -1,0 +1,59 @@
+import csv
+
+class _unitType:
+    def __init__(self):
+        self.key = "UNITTYPE_KEY"
+        self.name = "UnittypeName"
+        
+        self.maxLife = 10
+        self.maxMove = 1.0
+        self.attack = 1
+        self.defense = 1
+        self.specials = None #list of strings
+        
+        self.cost = 10 #number of hammers
+        self.requires = None #technology
+    
+    def __repr__(self):
+        return "C_UNITTYPE:{}".format(self.key)
+
+_unitTypes = {}
+
+class unit:
+    def __init__(self, unitType, owner = 0, position = (0,0)):
+        self.unitType = unitType
+        self.owner = owner
+        self.position = position
+        
+        self.name = self.unitType.name
+        self.curLife = self.maxLife
+        self.curMove = self.maxMove
+    
+    def __repr__(self):
+        return "C_UNIT:{}".format(self.name)
+        
+    def endTurn(self):
+        self.curMove = self.maxMove
+        if self.curLive < self.maxLife:
+            self.curLive = min(self.curLive + 5, self.maxLife)
+            
+     
+    @property
+    def maxLife(self):
+        return self.unitType.maxLife
+        
+    @property
+    def maxMove(self):
+        return self.unitType.maxMove
+        
+    @property
+    def attack(self):
+        return self.unitType.attack
+        
+    @property
+    def defense(self):
+        return self.unitType.defense
+        
+    @property
+    def specials(self):
+        return self.unitType.specials
