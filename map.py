@@ -11,7 +11,7 @@ class _terrain:
         self.travelCost = 1
         self.defensiveBonus = 0
         self.availableFeatures = set()
-        self.isMaritime = False
+        self.ttype = 0 #0 for ground, 1 for maritime
         
     def __repr__(self):
         return "C_TERRAIN:{}".format(self.key)
@@ -50,7 +50,7 @@ def _loadTerrains():
                 t.travelCost = float(row[6])
                 t.defensiveBonus = int(row[7])
                 t.availableFeatures = row[8].split(',')
-                t.isMaritime = (row[9]=="yes")
+                t.ttype = int(row[9])
                 _terrains[t.key] = t
                 
 def _loadFeatures():
@@ -73,6 +73,8 @@ class tile:
     def __init__(self):
         self.terrain = _terrains["GRASSLAND"]
         self.features = None
+    def __repr__(self):
+        return "C_TILE:[{}][{}]".format(self.terrain,self.features)
         
     def getSpecialExists(self,special):
         if self.features == None:
@@ -159,23 +161,23 @@ class tile:
            
     @property
     def productionYield(self):
-        output = self.terrain.foodYield + self.getSpecialValueSum("PRODUCTION_YIELD")
+        output = self.terrain.productionYield + self.getSpecialValueSum("PRODUCTION_YIELD")
         output *= self.getSpecialValueProduct("ALL_MULTIPLIER")
         return int(output)
            
     @property
     def commerceYield(self):
-        output = self.terrain.foodYield + self.getSpecialValueSum("COMMERCE_YIELD")
+        output = self.terrain.commerceYield + self.getSpecialValueSum("COMMERCE_YIELD")
         output *= self.getSpecialValueProduct("ALL_MULTIPLIER")
         return int(output)
            
     @property
     def defensiveBonus(self):
-        return self.terrain.defensiveBonus + self.getSpecialValueSum("DEFENSIVE_BONUS")
+        return int(self.terrain.defensiveBonus + self.getSpecialValueSum("DEFENSIVE_BONUS"))
            
     @property
-    def isMaritime(self):
-        return self.terrain.isMaritime
+    def ttype(self):
+        return self.terrain.ttype
         
         
         
