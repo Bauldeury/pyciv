@@ -1,0 +1,31 @@
+GAME
+define turn order
+
+PLAYER
+
+TECHS
+class
+csv
+csv read
+
+UNITS
+csv
+csv read
+orders
+
+CITY
+list cities
+orders
+
+BUILDINGS
+simplify specials (include in building class)
+internalize dict in __init__
+
+MAP
+internalize terrains dict in __init__
+internalize features dict in __init__
+create map generator
+
+
+MISC
+migrate CSV analysis to a common.py
