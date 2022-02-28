@@ -1,8 +1,10 @@
 import csv
+import common
 
+_terrains = {}
 class _terrain:
-    def __init__(self):
-        self.key = "TERRAIN_KEY"
+    def __init__(self, key):
+        self.key = key
         self.name = "TerrainName"
         self.description = "TerrainDescription"
         self.foodYield = 0
@@ -12,13 +14,15 @@ class _terrain:
         self.defensiveBonus = 0
         self.availableFeatures = set()
         self.ttype = 0 #0 for ground, 1 for maritime
+        _terrains[self.key] = self
         
     def __repr__(self):
         return "C_TERRAIN:{}".format(self.key)
 
+_features = {}
 class _feature:
-    def __init__(self):
-        self.key = ("FEATURE_KEY","TERRAIN_KEY")
+    def __init__(self,key):
+        self.key = key
         self.name = "FeatureName"
         self.description = "FeatureDescription"
         self.requires = None
@@ -31,17 +35,14 @@ class _feature:
         return "C_FEATURE:{}".format(self.key)
 
 
-
-_terrains = {}
-_features = {}
-
 def _loadTerrains():
     with open("terrains.csv", newline ="") as csvfile:
         reader = csv.reader(csvfile, delimiter=';')
         for row in reader:
             if row[0] != "key":
-                t = _terrain()
-                t.key = row[0]
+                key = row[0]
+                t = _terrain(key)
+                
                 t.name = row[1]
                 t.description = row[2]
                 t.foodYield = float(row[3])
@@ -51,15 +52,15 @@ def _loadTerrains():
                 t.defensiveBonus = int(row[7])
                 t.availableFeatures = row[8].split(',')
                 t.ttype = int(row[9])
-                _terrains[t.key] = t
                 
 def _loadFeatures():
     with open("features.csv", newline ="") as csvfile:
         reader = csv.reader(csvfile, delimiter=';')
         for row in reader:
             if row[0] != "key":
-                f = _feature()
-                f.key =(row[0],row[1] if row[1]!="" else None)
+                key =(row[0],row[1] if row[1]!="" else None)
+                f = _feature(key)
+                
                 f.name = row[2]
                 f.description = row[3]
                 f.requires = row[4] if row[4] != "" else None
@@ -67,7 +68,6 @@ def _loadFeatures():
                 f.ftype = int(row[6]) #0 for natural features, 1 for resources, 2 for roads, 3 for other improvements
                 f.workAmount = int(row[7]) if row[7] != "" else None
                 f.specials = row[8].split(',') if row[8] != "" else None
-                _features[f.key] = f
     
 class tile:
     def __init__(self):
@@ -179,8 +179,8 @@ class tile:
     def ttype(self):
         return self.terrain.ttype
         
-        
-        
+      
+    
 
 
 class map:
@@ -191,6 +191,7 @@ class map:
         for x in range (sizeX):
             for y in range (sizeY):
                 self.tiles[(x,y)] = tile()
+    
         
 _loadTerrains()
 _loadFeatures()

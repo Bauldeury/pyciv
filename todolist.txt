@@ -22,8 +22,6 @@ simplify specials (include in building class)
 internalize dict in __init__
 
 MAP
-internalize terrains dict in __init__
-internalize features dict in __init__
 create map generator
 
 

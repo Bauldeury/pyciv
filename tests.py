@@ -53,8 +53,7 @@ def testTileComputation(verbose):
     out_messages = []
 
     #basic data
-    tr = map._terrain()
-    tr.key = "TR_TEST"
+    tr = map._terrain("TR_TEST")
     tr.foodYield = 3
     tr.productionYield = 2
     tr.commerceYield = 1
@@ -66,8 +65,7 @@ def testTileComputation(verbose):
         indentedPrint("FOOD:{}, PROD:{}, COMM:{}, MOVE:{}, DEF:{}".format(tr.foodYield,tr.productionYield,tr.commerceYield,tr.travelCost, tr.defensiveBonus) )
         indentedPrint()
     
-    ft = map._feature()
-    ft.key = ("FT_TEST","TR_TEST")
+    ft = map._feature(("FT_TEST","TR_TEST"))
     ft.specials = ["COMMERCE_YIELD","4","DEFENSIVE_BONUS","100","SET_MOVEMENT_COST","0.5","ALL_MULTIPLIER","1.5"]
     map._features[ft.key] = ft
     if verbose:
