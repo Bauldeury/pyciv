@@ -77,43 +77,13 @@ class tile:
         return "C_TILE:[{}][{}]".format(self.terrain,self.features)
         
     def getSpecialExists(self,special):
-        if self.features == None:
-            return False
-        else:
-            fts = self.features
-            for i in fts:
-                if fts[i].specials != None :
-                    if special in fts[i].specials:
-                        output = True
-        return False
+        return common.getSpecialExists(self.features,special)
                         
     def getSpecialValueSum(self,special):
-        if self.features == None:
-            return 0.0
-        else:
-            output = 0.0
-            fts = self.features
-            for i_ft in fts:
-                sps = fts[i_ft].specials
-                if sps != None:
-                    for i_sp in range(len(sps)-1):
-                        if special == sps[i_sp]:
-                            output += float(sps[i_sp+1])
-            return output
+        return common.getSpecialValueSum(self.features,special)
 
     def getSpecialValueProduct(self,special):
-        if self.features == None:
-            return 1.0
-        else:
-            output = 1.0
-            fts = self.features
-            for i_ft in fts:
-                sps = fts[i_ft].specials
-                if sps != None:
-                    for i_sp in range(len(sps)-1):
-                        if special == sps[i_sp]:
-                            output *= float(sps[i_sp+1])
-            return output
+        return common.getSpecialValueProduct(self.features,special)
         
         
     def addFeature(self,featureKey1):
