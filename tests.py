@@ -156,8 +156,7 @@ def runTests(verbose = False):
     messages += testTileComputation(verbose)
     messages += testCSVLoad(verbose,"terrains.csv","key;name;description;foodYield;productionYield;commerceYield;travelCost;defensiveBonus;availableFeatures;terrainType")
     messages += testCSVLoad(verbose,"features.csv","key;terrain;name;description;requires;constraints;type;workAmount;specials")
-    messages += testCSVLoad(verbose,"buildings.csv","key;name;description;hammerCost;purchaseCost;maintenance;requires;obsoletedBy")
-    messages += testCSVLoad(verbose,"buildings_specials.csv","buildingKey;specialKey;arg1;arg2;comment")
+    messages += testCSVLoad(verbose,"buildings.csv","key;name;description;hammerCost;maintenance;requires;obsoletedBy;specials")
     
     print("##### MAPTESTS END: {} errors".format(len(messages)))
     for m in messages:

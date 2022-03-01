@@ -18,8 +18,7 @@ list cities
 orders
 
 BUILDINGS
-simplify specials (include in building class)
-internalize dict in __init__
+create tests for special computation
 
 MAP
 create map generator
