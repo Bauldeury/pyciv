@@ -1,5 +1,5 @@
 def getSpecialExists(items,searchedItem):
-#-items: must be a list of items
+#-items: must be a dict of items
 #---item: must have a list of specials called "specials", string list
 #-searchedItem
     if items == None:
@@ -12,7 +12,7 @@ def getSpecialExists(items,searchedItem):
     return False
     
 def getSpecialValueSum(items,searchedItem):
-#-items: must be a list of items
+#-items: must be a dict of items
 #---item: must have a list of specials called "specials", string list
     if items == None:
         return 0.0
@@ -27,8 +27,8 @@ def getSpecialValueSum(items,searchedItem):
         return output
 
 def getSpecialValueProduct(items,searchedItem):
-#-items: must be a list of items
-#---item: must have a list of specials c    alled "specials", string list
+#-items: must be a dict of items
+#---item: must have a list of specials called "specials", string list
     if items == None:
         return 1.0
     else:
@@ -40,4 +40,37 @@ def getSpecialValueProduct(items,searchedItem):
                     if searchedItem == sps[i_sp]:
                         output *= float(sps[i_sp+1])
         return output
+        
+def getSpecialValueMax(items,searchedItem):
+#-items: must be a dict of items
+#---item: must have a list of specials called "specials", string list
+    if items == None:
+        return None
+    else:
+        output = None
+        for i_it in items:
+            sps = items[i_it].specials
+            if sps != None:
+                for i_sp in range(len(sps)-1):
+                    if searchedItem == sps[i_sp]:
+                        inspectedValue = float(sps[i_sp+1])
+                        if (output == None or output < inspectedValue):
+                            output = inspectedValue
+        return output
     
+def getSpecialValueMin(items,searchedItem):
+#-items: must be a dict of items
+#---item: must have a list of specials called "specials", string list
+    if items == None:
+        return None
+    else:
+        output = None
+        for i_it in items:
+            sps = items[i_it].specials
+            if sps != None:
+                for i_sp in range(len(sps)-1):
+                    if searchedItem == sps[i_sp]:
+                        inspectedValue = float(sps[i_sp+1])
+                        if (output == None or output > inspectedValue):
+                            output = inspectedValue
+        return output

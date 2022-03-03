@@ -19,6 +19,7 @@ orders
 
 BUILDINGS
 create tests for special computation
+create link to city
 
 MAP
 create map generator

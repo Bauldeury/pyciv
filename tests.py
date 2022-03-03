@@ -11,40 +11,37 @@ def printInstance(ins):
 def indentedPrint(txt = ""):
     print("|_ {}".format(txt))
 
-# mymap = map.map(10,10)
+def testCSVLoad(verbose, filename, header):
+    #init
+    if verbose:
+        indentedPrint("testCSVLoad START->{}".format(filename))
+    out_messages = []
+    
+    #check the headers
+    with open(filename, newline ="") as csvfile:
+        reader = csv.reader(csvfile, delimiter=';')
+        firstRow = ";".join(next(reader))
+        target = header
+        error = target != firstRow
+        if error :
+            message = "ERROR: {} header is wrong".format(filename)
+            out_messages.append(message)
+        if verbose:
+            indentedPrint("{} header test".format(filename))
+            indentedPrint("READED:"+firstRow)
+            if error:
+                indentedPrint(message)
+                indentedPrint("ERROR: TARGET IS:{}".format(target))
+            else:
+                indentedPrint("OK")
+            indentedPrint()
 
-# print()
-# print("TERRAIN TEST: DESERT")
-# t = map._terrains["DESERT"]
-# printInstance(t)
-# del t
-
-# print()
-# print("FEATURE TEST: RAILROAD")
-# f = map._features[("RAILROAD","DESERT")]
-# printInstance(f)
-# del f
-
-# print()
-# print("TILE TEST: PLAINS, WHEAT, ROAD then overwrite with RAILROAD")
-# t = map.tile()
-# t.terrain = map._terrains["PLAINS"]
-# t.addFeature("WHEAT")
-# t.addFeature("ROAD")
-# t.addFeature("RAILROAD")
-# printInstance(t)
-# del t
-
-# print()
-# print("YIELD TEST: PLAINS, WHEAT, IRRIGATION,RAILROAD")
-# t = map.tile()
-# t.addFeature("WHEAT")
-# t.addFeature("IRRIGATION")
-# t.addFeature("RAILROAD")
-# print("FOOD:{}".format(t.foodYield))
-# print("TRAVEL_COST:{}".format(t.travelCost))
-# del t
-
+    
+    indentedPrint("testCSVLoad END->{}: {} errors".format(filename,len(out_messages)))
+    if verbose: print()
+    
+    return out_messages
+    
 def testTileComputation(verbose):
     #init
     if verbose:
@@ -119,46 +116,32 @@ def testTileComputation(verbose):
     
     return out_messages
 
-def testCSVLoad(verbose, filename, header):
+def testBuildings(verbose):
     #init
     if verbose:
-        indentedPrint("testCSVLoad START->{}".format(filename))
+        indentedPrint("testBuildings START")
+        indentedPrint()
     out_messages = []
     
-    #check the headers
-    with open(filename, newline ="") as csvfile:
-        reader = csv.reader(csvfile, delimiter=';')
-        firstRow = ";".join(next(reader))
-        target = header
-        error = target != firstRow
-        if error :
-            message = "ERROR: {} header is wrong".format(filename)
-            out_messages.append(message)
-        if verbose:
-            indentedPrint("{} header test".format(filename))
-            indentedPrint("READED:"+firstRow)
-            if error:
-                indentedPrint(message)
-                indentedPrint("ERROR: TARGET IS:{}".format(target))
-            else:
-                indentedPrint("OK")
-            indentedPrint()
-
     
-    indentedPrint("testCSVLoad END->{}: {} errors".format(filename,len(out_messages)))
+    
+    
+    
+    indentedPrint("testBuildings END: {} errors".format(len(out_messages)))
     if verbose: print()
     
     return out_messages
 
 def runTests(verbose = False):
     messages = []
-    print("##### MAPTESTS START")
+    print("##### TESTS START")
     messages += testTileComputation(verbose)
     messages += testCSVLoad(verbose,"terrains.csv","key;name;description;foodYield;productionYield;commerceYield;travelCost;defensiveBonus;availableFeatures;terrainType")
     messages += testCSVLoad(verbose,"features.csv","key;terrain;name;description;requires;constraints;type;workAmount;specials")
     messages += testCSVLoad(verbose,"buildings.csv","key;name;description;hammerCost;maintenance;requires;obsoletedBy;specials")
+    messages += testBuildings(verbose)
     
-    print("##### MAPTESTS END: {} errors".format(len(messages)))
+    print("##### TESTS END: {} errors".format(len(messages)))
     for m in messages:
         indentedPrint(m)
     if not verbose:
