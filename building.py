@@ -40,13 +40,14 @@ def _loadBuidings():
                 bld.specials = (None if row[7] == '' else row[7].split(','))
             
 class buildingSet:
-    def __init__(self):
+    def __init__(self, city = None):
         self._blds = {}
         self._sps = {}
         self._computeSpecials()
+        self.city = city
         
     def __repr__(self):
-        return "C_BUILDING_SET:{}".format(self._blds)
+        return "C_BUILDING_SET:{}".format(self._blds.keys())
         
     def _computeSpecials(self):
         self._sps["POP_SUPPORT"] = int(common.getSpecialValueSum(self._blds,"POP_SUPPORT"))
@@ -70,8 +71,18 @@ class buildingSet:
         self._blds[buildingKey] = _buildings[buildingKey]
         self._computeSpecials()
         
+    def addBulk(self,buildingKeySet):
+        for buildingKey in buildingKeySet:
+            self._blds[buildingKey] = _buildings[buildingKey]
+        self._computeSpecials()
+        
     def remove(self,buildingKey):
         self._blds.pop(buildingKey)
+        self._computeSpecials()
+        
+    def removeBulk(self,buildingKeySet):
+        for buildingKey in buildingKeySet:
+            self._blds.pop(buildingKey)
         self._computeSpecials()
         
     def build(self,buildingKey):
@@ -80,18 +91,7 @@ class buildingSet:
         
     def toSet(self):
         return self._blds.copy()
-        
-    @property
-    def count(self):
-        return len(self._blds)
-        
-    @property
-    def specials(self):
-        return self._sps.copy()
-        
-    def special(self,specialKey):
-        return self._sps[specialKey]
-    
+     
     
     def canBuild(self,buildingKey):
         if buildingKey in self._blds:
@@ -115,5 +115,22 @@ class buildingSet:
         
         return True
         
+    def getBuildables(self):
+        return set(x for x in _buildings if self.canBuild(x))
+       
+    @property
+    def count(self):
+        return len(self._blds)
+        
+    @property
+    def specials(self):
+        return self._sps.copy()
+        
+    def special(self,specialKey):
+        return self._sps[specialKey]
+        
+    @property
+    def tile(self):
+        return city.tile
 
 _loadBuidings()

@@ -1,3 +1,4 @@
+_players = {}
 class player:
     def __init__(self):
         self.key = 0
