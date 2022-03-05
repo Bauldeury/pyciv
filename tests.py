@@ -123,7 +123,77 @@ def testBuildings(verbose):
         indentedPrint()
     out_messages = []
     
+    #basic data
+    blds = building.buildingSet()
+    #test buildings
+    building1 = building._building("BUILDING1")
+    building2 = building._building("BUILDING2")
+    s1 = 3
+    s2 = 5
+    building1.specials = ["POP_SUPPORT",s1]
+    building2.specials = ["POP_SUPPORT",s2]
     
+    #test 1: no building
+    target = 0
+    erreur = (blds.special("POP_SUPPORT") != target)
+    if erreur:
+        message = "ERROR: POP_SUPPORT target is {}. Calculated value is {}".format(target,blds.special("POP_SUPPORT"))
+        out_messages.append(message)
+    if verbose:
+        indentedPrint(blds)
+        indentedPrint(blds.specials)
+        if erreur: indentedPrint(message)
+    
+    #test 2: adding the building1
+    try:
+        blds.add("BUILDING1")
+    except BaseException as err:
+        out_messages.append("{}:{}".format(type(err),err))
+        return out_messages
+    
+    target = s1
+    erreur = (blds.special("POP_SUPPORT") != target)
+    if erreur:
+        message = "ERROR: POP_SUPPORT target is {}. Calculated value is {}".format(target,blds.special("POP_SUPPORT"))
+        out_messages.append(message)
+    if verbose:
+        indentedPrint(blds)
+        indentedPrint(blds.specials)
+        if erreur: indentedPrint(message)
+    
+    #test 3: adding the building2
+    try:
+        blds.add("BUILDING2")
+    except BaseException as err:
+        out_messages.append("{}:{}".format(type(err),err))
+        return out_messages
+    
+    target = s1+s2
+    erreur = (blds.special("POP_SUPPORT") != target)
+    if erreur:
+        message = "ERROR: POP_SUPPORT target is {}. Calculated value is {}".format(target,blds.special("POP_SUPPORT"))
+        out_messages.append(message)
+    if verbose:
+        indentedPrint(blds)
+        indentedPrint(blds.specials)
+        if erreur: indentedPrint(message)
+    
+    #test 4:removing the building1
+    try:
+        blds.remove("BUILDING1")
+    except BaseException as err:
+        out_messages.append("{}:{}".format(type(err),err))
+        return out_messages
+    
+    target = s2
+    erreur = (blds.special("POP_SUPPORT") != target)
+    if erreur:
+        message = "ERROR: POP_SUPPORT target is {}. Calculated value is {}".format(target,blds.special("POP_SUPPORT"))
+        out_messages.append(message)
+    if verbose:
+        indentedPrint(blds)
+        indentedPrint(blds.specials)
+        if erreur: indentedPrint(message)
     
     
     

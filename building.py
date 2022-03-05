@@ -37,7 +37,7 @@ def _loadBuidings():
                 bld.maintenance = row[4]
                 bld.requires = (None if row[5] == '' else row[5])
                 bld.obsoletedBy = (None if row[6] == '' else row[6])
-                bld.specials = row[7].split(',')
+                bld.specials = (None if row[7] == '' else row[7].split(','))
             
 class buildingSet:
     def __init__(self):
@@ -49,18 +49,18 @@ class buildingSet:
         return "C_BUILDING_SET:{}".format(self._blds)
         
     def _computeSpecials(self):
-        self._sps["POP_SUPPORT"] = common.getSpecialValueSum(self._blds,"POP_SUPPORT")
+        self._sps["POP_SUPPORT"] = int(common.getSpecialValueSum(self._blds,"POP_SUPPORT"))
         
-        self._sps["INCREASE_TAX_RATE"] = common.getSpecialValueSum(self._blds,"INCREASE_TAX_RATE")
-        self._sps["INCREASE_SCIENCE_RATE"] = common.getSpecialValueSum(self._blds,"INCREASE_SCIENCE_RATE")
-        self._sps["DECREASE_CORRUPTION"] = common.getSpecialValueSum(self._blds,"DECREASE_CORRUPTION")
-        self._sps["DECREASE_INDUSTRIAL_POLLUTION"] = common.getSpecialValueSum(self._blds,"DECREASE_INDUSTRIAL_POLLUTION")
+        self._sps["INCREASE_TAX_RATE"] = int(common.getSpecialValueSum(self._blds,"INCREASE_TAX_RATE"))
+        self._sps["INCREASE_SCIENCE_RATE"] = int(common.getSpecialValueSum(self._blds,"INCREASE_SCIENCE_RATE"))
+        self._sps["DECREASE_CORRUPTION"] = int(common.getSpecialValueSum(self._blds,"DECREASE_CORRUPTION"))
+        self._sps["DECREASE_INDUSTRIAL_POLLUTION"] = int(common.getSpecialValueSum(self._blds,"DECREASE_INDUSTRIAL_POLLUTION"))
+        self._sps["DEFENSE_BONUS"] = int(common.getSpecialValueSum(self._blds,"DEFENSE_BONUS"))
         
-        self._sps["FOOD_YIELD"] = common.getSpecialValueSum(self._blds,"FOOD_YIELD")
-        self._sps["PRODUCTION_YIELD"] = common.getSpecialValueSum(self._blds,"PRODUCTION_YIELD")
-        self._sps["COMMERCE_YIELD"] = common.getSpecialValueSum(self._blds,"COMMERCE_YIELD")
-        self._sps["HAPPINESS_YIELD"] = common.getSpecialValueSum(self._blds,"HAPPINESS_YIELD")
-        self._sps["DEFENSE_BONUS"] = common.getSpecialValueSum(self._blds,"DEFENSE_BONUS")
+        self._sps["FOOD_YIELD"] = int(common.getSpecialValueSum(self._blds,"FOOD_YIELD"))
+        self._sps["PRODUCTION_YIELD"] = int(common.getSpecialValueSum(self._blds,"PRODUCTION_YIELD"))
+        self._sps["COMMERCE_YIELD"] = int(common.getSpecialValueSum(self._blds,"COMMERCE_YIELD"))
+        self._sps["HAPPINESS_YIELD"] = int(common.getSpecialValueSum(self._blds,"HAPPINESS_YIELD"))
         
         self._sps["ALLOW_VETERANS"] = common.getSpecialExists(self._blds,"ALLOW_VETERANS")
         self._sps["FORT"] = common.getSpecialExists(self._blds,"FORT")
@@ -84,6 +84,13 @@ class buildingSet:
     @property
     def count(self):
         return len(self._blds)
+        
+    @property
+    def specials(self):
+        return self._sps.copy()
+        
+    def special(self,specialKey):
+        return self._sps[specialKey]
     
     
     def canBuild(self,buildingKey):
