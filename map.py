@@ -73,6 +73,7 @@ class tile:
     def __init__(self):
         self.terrain = _terrains["GRASSLAND"]
         self.features = None
+        
     def __repr__(self):
         return "C_TILE:[{}][{}]".format(self.terrain,self.features)
         
@@ -161,6 +162,12 @@ class map:
         for x in range (sizeX):
             for y in range (sizeY):
                 self.tiles[(x,y)] = tile()
+               
+    def getTile(self,x,y):
+        if x >= self.sizeX or y >= self.sizeY:
+            return None
+        else:
+            return self.tiles[(x,y)]
     
         
 _loadTerrains()

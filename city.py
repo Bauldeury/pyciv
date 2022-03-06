@@ -3,11 +3,12 @@ import player
 
 _cities = {}
 class city:
-    
+    _citiesNextKey = 0
     
     #ADMIN    
-    def __init__(self, name = "Noname", owner = None, tile = None):
-        self.key = len(_cities)
+    def __init__(self, tile, name = "Noname", owner = None):
+        self.key = city._citiesNextKey
+        city._citiesNextKey += 1
         _cities[self.key] = self
         
         self.name = name
@@ -97,5 +98,5 @@ class city:
 
 class helper():
     def endTurn():
-        for city in _cities:
-            _cities[city].endTurn()
+        for i_city in _cities:
+            _cities[i_city].endTurn()
