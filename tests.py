@@ -2,6 +2,7 @@ import mymap
 import city
 import building
 import unit
+import tech
 
 import csv
 
@@ -209,6 +210,7 @@ def runTests(verbose = False):
     messages += testCSVLoad(verbose,"terrains.csv","key;name;description;foodYield;productionYield;commerceYield;travelCost;defensiveBonus;availableFeatures;terrainType")
     messages += testCSVLoad(verbose,"features.csv","key;terrain;name;description;requires;constraints;type;workAmount;specials")
     messages += testCSVLoad(verbose,"buildings.csv","key;name;description;hammerCost;maintenance;requires;obsoletedBy;specials")
+    messages += testCSVLoad(verbose,"techs.csv","key;name;description;cost;requires")
     messages += testBuildings(verbose)
     
     print("##### TESTS END: {} errors".format(len(messages)))

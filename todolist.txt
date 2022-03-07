@@ -1,12 +1,8 @@
 GAME
-define turn order
 
 PLAYER
 
 TECHS
-class
-csv
-csv read
 
 UNITS
 csv
@@ -14,16 +10,12 @@ csv read
 orders
 
 CITY
-list cities
 orders
 
 BUILDINGS
-create tests for special computation
-create link to city
 
 MAP
 create map generator
 
 
 MISC
-migrate CSV analysis to a common.py

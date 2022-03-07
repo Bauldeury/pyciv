@@ -4,12 +4,15 @@ print("| |_) | \ \/ / | |     | |  \ \  / / ")
 print("|  __/   |  |  | |___  | |   \ \/ /  ")
 print("|_|      |__|   \____//___/   \__/   ")
 print()
-                                
+       
+import player  
+import techs
 import mymap
+
 import city
 import building
+
 import unit
-import player
 
 #vars
 

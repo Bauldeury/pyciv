@@ -100,7 +100,7 @@ class buildingSet:
         bld = _buildings[buildingKey]
         
         #TODO: technology requirement
-        if bld.requires == False:
+        if bld.requires == None:
             pass
             
         for i in range(len(bld.specials)):
