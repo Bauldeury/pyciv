@@ -5,7 +5,7 @@ print("|  __/   |  |  | |___  | |   \ \/ /  ")
 print("|_|      |__|   \____//___/   \__/   ")
 print()
                                 
-import map
+import mymap
 import city
 import building
 import unit
@@ -21,7 +21,7 @@ def _init():
     player.helper.registerEndTurnListener(endTurn)
 
     global mp
-    mp = map.map(50,25)
+    mp = mymap.mymap(50,25)
     
     p0 = player.player()
     p0.name = "Barbarians"
