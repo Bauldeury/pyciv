@@ -30,6 +30,7 @@ class _feature:
         self.ftype = 0 #0 for natural features, 1 for resources, 2 for roads, 3 for other improvements
         self.workAmount = 50
         self.specials = None
+        _features[self.key] = self
     
     def __repr__(self):
         return "C_FEATURE:{}".format(self.key)

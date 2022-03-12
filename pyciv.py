@@ -5,8 +5,8 @@ print("|  __/   |  |  | |___  | |   \ \/ /  ")
 print("|_|      |__|   \____//___/   \__/   ")
 print()
        
-import player  
-import techs
+import civilization  
+import tech
 import mymap
 
 import city
@@ -21,12 +21,12 @@ currentYear = -8000
 mp = None
 
 def _init():
-    player.helper.registerEndTurnListener(endTurn)
+    civilization.helper.registerEndTurnListener(endTurn)
 
     global mp
     mp = mymap.mymap(50,25)
     
-    p0 = player.player()
+    p0 = civilization.civilization()
     p0.name = "Barbarians"
     p0.leaderName = "Barbarator"
     p0.adjective = "barbarian"
@@ -34,14 +34,14 @@ def _init():
     p0.color2 = "393939"
     p0.canDoDiplomacy = False
     
-    p1 = player.player()
+    p1 = civilization.civilization()
     p1.name = "Francia"
-    p1.leaderName = "Player"
+    p1.leaderName = "civilization"
     p1.adjective = "frank"
     p1.color = "2E63CD"
     p1.color2 = "393939"
     
-    p2 = player.player()
+    p2 = civilization.civilization()
     p2.name = "Holy Roman Empire"
     p2.leaderName = "Barberousse"
     p2.adjective = "holy roman"
@@ -81,17 +81,17 @@ def endTurn():
     global turn
     
     city.helper.endTurn()
-    player.helper.endTurn()
+    civilization.helper.endTurn()
     
     turn += 1
     advanceYear()
     
     print("TURN {}: YEAR {}".format(turn,currentYear))
-    player.helper.startTurn()
+    civilization.helper.startTurn()
 
 
 _init()
 
-player.helper.getPlayer(0).endTurn()
-player.helper.getPlayer(1).endTurn()
-player.helper.getPlayer(2).endTurn()
+civilization.helper.getcivilization(0).endTurn()
+civilization.helper.getcivilization(1).endTurn()
+civilization.helper.getcivilization(2).endTurn()

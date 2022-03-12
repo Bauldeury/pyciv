@@ -57,7 +57,7 @@ def testTileComputation(verbose):
     tr.commerceYield = 1
     tr.travelCost = 1
     tr.defensiveBonus = 0
-    mymap._terrains[tr.key] = tr
+    
     if verbose:
         indentedPrint(tr)
         indentedPrint("FOOD:{}, PROD:{}, COMM:{}, MOVE:{}, DEF:{}".format(tr.foodYield,tr.productionYield,tr.commerceYield,tr.travelCost, tr.defensiveBonus) )
@@ -65,7 +65,7 @@ def testTileComputation(verbose):
     
     ft = mymap._feature(("FT_TEST","TR_TEST"))
     ft.specials = ["COMMERCE_YIELD","4","DEFENSIVE_BONUS","100","SET_MOVEMENT_COST","0.5","ALL_MULTIPLIER","1.5"]
-    mymap._features[ft.key] = ft
+    
     if verbose:
         indentedPrint(ft)
         indentedPrint(ft.specials)
@@ -203,6 +203,72 @@ def testBuildings(verbose):
     
     return out_messages
 
+def testTechs(verbose):
+    #init
+    if verbose:
+        indentedPrint("testTechs START")
+        indentedPrint()
+    out_messages = []
+    
+    #basic data
+    tA = tech.tech("TECH_A")
+    tB = tech.tech("TECH_B")
+    tC = tech.tech("TECH_C")
+    tU = tech.tech("TECH_UNSEARCHEABLE")
+    
+    tA.requires = tB.requires = None
+    tC.requires = [tA.key,tB.key]
+    tU.requires = -1
+    
+    ts = tech.techSet()
+    
+    def testSearchability(shouldBeSearchable, techkey, searcheables, out_messages):
+        searcheables = ts.getSearcheables()
+        if shouldBeSearchable:
+            erreur = (techkey not in searcheables)
+        else:
+            erreur = (techkey in searcheables)
+            
+        if erreur:
+            if shouldBeSearchable:
+                message = "ERROR: researchable {} not in list".format(techkey)
+            else:
+                message = "ERROR: unresearchable {} in list".format(techkey) 
+            out_messages.append(message)
+        if verbose:
+            indentedPrint(searcheables)
+            if erreur: indentedPrint(message)
+    
+    #base situation
+    searcheables = ts.getSearcheables() 
+    testSearchability(True,tA.key,searcheables,out_messages)
+    testSearchability(True,tB.key,searcheables,out_messages)
+    testSearchability(False,tC.key,searcheables,out_messages)
+    testSearchability(False,tU.key,searcheables,out_messages)
+    
+    #tech A researched
+    ts.add(tA.key)
+    searcheables = ts.getSearcheables() 
+    testSearchability(False,tA.key,searcheables,out_messages)
+    testSearchability(True,tB.key,searcheables,out_messages)
+    testSearchability(False,tC.key,searcheables,out_messages)
+    testSearchability(False,tU.key,searcheables,out_messages)
+    
+    #tech A & B researched
+    ts.add(tB.key)
+    searcheables = ts.getSearcheables() 
+    testSearchability(False,tA.key,searcheables,out_messages)
+    testSearchability(False,tB.key,searcheables,out_messages)
+    testSearchability(True,tC.key,searcheables,out_messages)
+    testSearchability(False,tU.key,searcheables,out_messages)
+    
+    
+    
+    indentedPrint("testTechs END: {} errors".format(len(out_messages)))
+    if verbose: print()
+    
+    return out_messages
+
 def runTests(verbose = False):
     messages = []
     print("##### TESTS START")
@@ -211,7 +277,9 @@ def runTests(verbose = False):
     messages += testCSVLoad(verbose,"features.csv","key;terrain;name;description;requires;constraints;type;workAmount;specials")
     messages += testCSVLoad(verbose,"buildings.csv","key;name;description;hammerCost;maintenance;requires;obsoletedBy;specials")
     messages += testCSVLoad(verbose,"techs.csv","key;name;description;cost;requires")
+    
     messages += testBuildings(verbose)
+    messages += testTechs(verbose)
     
     print("##### TESTS END: {} errors".format(len(messages)))
     for m in messages:

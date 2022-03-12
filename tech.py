@@ -9,7 +9,7 @@ class tech:
         self.name = "TechName"
         self.description = "TechDesc"
         self.cost = 100
-        self.requires = None
+        self.requires = -1#list of tech keys, or None if available from the start, or -1 if impossible to search
         
         
 def _loadTechs():
@@ -22,7 +22,14 @@ def _loadTechs():
                 th.name = row[1]
                 th.description = row [2]
                 th.cost = row[3]
-                th.requires = (None if row[4] == '' else row[4].split(','))
+                
+                r_requires = row[4]
+                if r_requires == "-1":
+                    th.requires = -1
+                elif r_requires == "":
+                    th.requires = None
+                else:
+                    th.requires = r_requires.split(',')
     
     
 class techSet:
@@ -55,6 +62,9 @@ class techSet:
             return False
         
         th = _techs[techKey]
+        
+        if th.requires == -1:
+            return False
         
         if th.requires != None:
             for t in th.requires:
