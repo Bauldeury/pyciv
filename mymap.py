@@ -1,5 +1,6 @@
 import csv
 import common
+import math
 
 _terrains = {}
 class _terrain:
@@ -156,6 +157,8 @@ class tile:
 
 
 class mymap:
+    singleton = None
+
     def __init__(self,sizeX,sizeY):
         self.sizeX = sizeX
         self.sizeY = sizeY
@@ -163,12 +166,55 @@ class mymap:
         for x in range (sizeX):
             for y in range (sizeY):
                 self.tiles[(x,y)] = tile()
+        singleton = self
                
-    def getTile(self,x,y):
-        if x >= self.sizeX or y >= self.sizeY:
+    def getTile(self,pos):
+        if self.isPosValid(pos):
+            return self.tiles[pos]
+        else:
+            return None
+            
+    def isPosValid(self,pos):
+        if pos[0] >= self.sizeX or pos[1] >= self.sizeY or pos[0] < 0 or pos[1] <0:
+            return False
+        return True
+        
+    def getTravelCost(self, pos1, pos2):
+        if helper.chebyshevDistance(pos1,pos2) != 1:
             return None
         else:
-            return self.tiles[(x,y)]
+            return max(getTile[pos1].travelCost,getTile[pos2].travelCost)
+        
+            
+class helper:
+    def offsetN(pos):
+        return (pos[0],pos[1]+1)
+    def offsetS(pos):
+        return (pos[0],pos[1]-1)
+    def offsetW(pos):
+        return (pos[0]-1,pos[1])
+    def offsetE(pos):
+        return (pos[0]+1,pos[1])
+        
+    def offsetNW(pos):
+        return (pos[0]-1,pos[1]+1)
+    def offsetNE(pos):
+        return (pos[0]+1,pos[1]+1)
+    def offsetSW(pos):
+        return (pos[0]-1,pos[1]-1)
+    def offsetSE(pos):
+        return (pos[0]+1,pos[1]-1)
+        
+    def posNeighboors(pos):
+        return [offsetN(pos),offsetNE(pos),offsetE(pos),offsetSE(pos),offsetS(pos),offsetSW(pos),offsetW(pos),offsetNW(pos)]
+            
+    def euclidianDistance(pos1,pos2):
+        return math.sqrt(abs(pos1[0]-pos2[0])**2+abs(pos1[1]-pos2[1])**2)
+    def manhattanDistance(pos1,pos2):
+        return abs(pos1[0]-pos2[0])+abs(pos1[1]-pos2[1])
+    def chebyshevDistance(pos1,pos2):
+        return max(abs(pos1[0]-pos2[0]),abs(pos1[1]-pos2[1]))
+    
     
         
 _loadTerrains()

@@ -6,14 +6,14 @@ class city:
     _citiesNextKey = 0
     
     #ADMIN    
-    def __init__(self, tile, name = "Noname", owner = None):
+    def __init__(self, pos = (0,0), name = "Noname", owner = 0):
         self.key = city._citiesNextKey
         city._citiesNextKey += 1
         _cities[self.key] = self
         
         self.name = name
         self.owner = owner
-        self.tile = tile
+        self.pos = pos
         
         self.population = 1
         self.foodPile = 0 
@@ -26,7 +26,7 @@ class city:
 
         
     def __repr__(self):
-        return "C_CITY:({},{})".format(self.key,self.name)
+        return "C_CITY:({},{},{})".format(self.key,self.name,self.pos)
         
     def desc(self):
         print("{}: {} pop".format(self.name,self.population))
@@ -100,3 +100,9 @@ class helper():
     def endTurn():
         for i_city in _cities:
             _cities[i_city].endTurn()
+            
+    def getCitiesOnPos(pos):
+        return set(_cities[x] for x in _cities if _cities[x].pos == pos)
+        
+    def getCitiesOfOwner(ownerKey):
+        return set(_cities[x] for x in _cities if _cities[x].owner == ownerKey)

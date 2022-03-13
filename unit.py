@@ -1,5 +1,6 @@
 import csv
 
+_unitTypes = {}
 class _unitType:
     def __init__(self):
         self.key = "UNITTYPE_KEY"
@@ -17,20 +18,25 @@ class _unitType:
     def __repr__(self):
         return "C_UNITTYPE:{}".format(self.key)
 
-_unitTypes = {}
-
+_units = set()
 class unit:
-    def __init__(self, unitType, owner = 0, position = (0,0)):
+    def __init__(self, unitType, owner = 0, pos = (0,0)):
         self.unitType = unitType
         self.owner = owner
-        self.position = position
+        self.pos = pos
         
         self.name = self.unitType.name
         self.curLife = self.maxLife
         self.curMove = self.maxMove
+        
+        _units.add(self)
     
     def __repr__(self):
-        return "C_UNIT:{}".format(self.name)
+        return "C_UNIT:{},owner{},pos{}".format(self.name,self.owner,self.pos)
+        
+    def destroy(self):
+        _units.remove(self)
+        del self
         
     def endTurn(self):
         self.curMove = self.maxMove
@@ -57,3 +63,10 @@ class unit:
     @property
     def specials(self):
         return self.unitType.specials
+
+class helper:
+    def getUnitsOnPos(pos):
+        return set(x for x in _units if x.pos == pos)
+        
+    def getUnitsOfOwner(ownerKey):
+        return set(x for x in _units if x.owner == ownerKey)

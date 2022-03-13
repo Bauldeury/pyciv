@@ -48,10 +48,10 @@ def _init():
     p2.color = "EED221"
     p2.color2 = "393939"
     
-    c1 = city.city(name = "Paris", owner = p1.key, tile = mp.getTile(1,1))
+    c1 = city.city(name = "Paris", owner = p1.key, pos = (1,1))
     
     
-    c2 = city.city(name = "Berlin", owner = p2.key, tile = mp.getTile(5,5))
+    c2 = city.city(name = "Berlin", owner = p2.key, pos = (5,5))
     
 def advanceYear():
     global currentYear
