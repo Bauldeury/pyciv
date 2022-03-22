@@ -34,6 +34,11 @@ class clientApp(tk.Tk):
         self.ssocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.ssocket.connect((self.hote, self.port))
         print ("[+] Connection on {}:{}.".format(self.hote,self.port))
+                    
+    def stop(self):
+        self.quitflag = True
+        self.ssocket.close()
+        print ("[-] Connection closed.")   
         
     def start(self):
         self.quitflag = False
@@ -43,37 +48,33 @@ class clientApp(tk.Tk):
                 break
                 
             # self.ssocket.setblocking(0)
-            rsock, wsock, esock = select.select([self.ssocket],[],[],0.05)
+            rsock, wsock, esock = select.select([self.ssocket],[],[],0.02)
             for sock in rsock:
                 response = sock.recv(256).decode()
                 if response != b"":
-                    print(response)
-                    self.printChat(response)
-            
-    def stop(self):
-        self.quitflag = True
-        self.ssocket.close()
-        print ("[-] Connection closed.")     
+                    executeInfo(response)
+  
+    def executeInfo(self,info):
+        print(info)
+        self.printChat(info)
+        
+    def sendCmd(self,cmd):
+        self.ssocket.send(cmd.encode())
+        
         
     def press_button(self):
         print("button pressed!")
         message = self.e_chatEntry.get()
         if message != "":
             self.e_chatEntry.delete(0,tk.END)
-            self.ssocket.send(message.encode())
+            sendCmd(message)
             
     def printChat(self,message):
         self.m_chatView.config(text=message)
 
         
-    def listenInfo(self):
-        pass
-        
-    def executeInfo(self,info):
-        pass
-        
-    def sendCmd(self,cmd):
-        pass
+
+
         
 if __name__ == "__main__":
     app = clientApp()
