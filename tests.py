@@ -1,8 +1,8 @@
-import mymap
-import city
-import building
-import unit
-import tech
+import common.mymap as mymap
+import common.city as city
+import common.building as building
+import common.unit as unit
+import common.tech as tech
 
 import csv
 
