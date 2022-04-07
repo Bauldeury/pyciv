@@ -40,9 +40,12 @@ class server:
         self.stop()
        
        
-    def removeConnectionThread(self, conn):
-        # conn.stop()
-        self.connectionThreads.remove(conn)
+    def removeConnectionThread(self, thread):
+        # print(self.connectionThreads)
+        # print(thread)
+        if thread in self.connectionThreads:
+            self.connectionThreads.remove(thread)
+            # print(self.connectionThreads)
 
         
     def broadcastInfo(self,info):
@@ -80,6 +83,7 @@ class connectionThread(threading.Thread):
             except:
                 print("connection interrupted [type 2]")
                 break 
+        self.stop()
 
     
     def executeCmd(self,cmd):
@@ -96,7 +100,7 @@ class connectionThread(threading.Thread):
     def stop(self,msg = "No msg"):
         self.conn.close()
         print("[-] Fin du thread pour {}:{}".format(self.ip, self.port))
-        server.removeConnectionThread(self)
+        self.server.removeConnectionThread(self)
         
                 
 if __name__ == "__main__":
