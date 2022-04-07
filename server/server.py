@@ -53,6 +53,7 @@ class server:
     
 class connectionThread(threading.Thread):
     def __init__(self,server,conn,ip,port):
+        threading.Thread.__init__(self)
         self.server = server
         self.conn = conn
         self.ip = ip
@@ -60,12 +61,12 @@ class connectionThread(threading.Thread):
         
         print("[+] Nouveau thread pour {}:{}".format(self.ip, self.port))
         
-    def start(self):
+    def run(self):
         #ask authentification (civkey)
         #receive auth
         self.civkey = "TODO"
         #setup connectionThread
-        
+
         msg = ""
    
         while True:
@@ -82,7 +83,7 @@ class connectionThread(threading.Thread):
 
     
     def executeCmd(self,cmd):
-        print(cmd.decode())
+        print("{}:{}>>{}".format(self.ip,self.port,cmd.decode()))
         
     def sendInfo(self, info):
         try:
