@@ -81,4 +81,4 @@ def getCommonPath():
     elif __package__ == "common":
         return "common/"
     
-print (__name__)
+# print (__name__)

@@ -47,11 +47,11 @@ class clientApp():
     def sendCmd(self,cmd):
         self.ssocket.send(cmd.encode())
 
-
-        
-
+   
+def main():
+    app = clientApp()
+    app.start()
 
         
 if __name__ == "__main__":
-    app = clientApp()
-    app.start()
+    main()

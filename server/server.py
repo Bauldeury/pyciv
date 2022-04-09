@@ -1,6 +1,8 @@
 import socket
 import threading
 
+import common.pyciv
+
 class server:
 
     def __init__(self):
@@ -102,7 +104,11 @@ class connectionThread(threading.Thread):
         print("[-] Fin du thread pour {}:{}".format(self.ip, self.port))
         self.server.removeConnectionThread(self)
         
-                
-if __name__ == "__main__":
+        
+def main():
     s = server()
     s.start()
+    
+                
+if __name__ == "__main__":
+    main()

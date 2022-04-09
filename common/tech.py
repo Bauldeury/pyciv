@@ -89,7 +89,7 @@ class techSet:
     
 class helper:
     def byteToTech(byteKey):
-        for item in _techs.items():
+        for item in _techs.values():
             if item.byteKey == byteKey:
                 return item
         return None

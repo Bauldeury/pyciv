@@ -137,7 +137,7 @@ class buildingSet:
 
 class helper:
     def byteToBuilding(byteKey):
-        for item in _buildings.items():
+        for item in _buildings.values():
             if item.byteKey == byteKey:
                 return item
         return None

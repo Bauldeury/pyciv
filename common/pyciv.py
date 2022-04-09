@@ -90,8 +90,13 @@ def endTurn():
     civilization.helper.startTurn()
 
 
-_init()
 
-civilization.helper.getcivilization(0).endTurn()
-civilization.helper.getcivilization(1).endTurn()
-civilization.helper.getcivilization(2).endTurn()
+def main():
+    _init()
+
+    civilization.helper.getcivilization(0).endTurn()
+    civilization.helper.getcivilization(1).endTurn()
+    civilization.helper.getcivilization(2).endTurn()
+
+if __name__ == "__main__":
+    main()

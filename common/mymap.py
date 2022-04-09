@@ -220,13 +220,13 @@ class helper:
        
         
     def byteToTerrain(byteKey):
-        for item in _terrains.items():
+        for item in _terrains.values():
             if item.byteKey == byteKey:
                 return item
         return None
         
     def byteToFeature(byteKey):
-        for item in _features.items():
+        for item in _features.values():
             if item.byteKey == byteKey:
                 return item
         return None

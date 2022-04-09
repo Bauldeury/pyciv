@@ -77,7 +77,7 @@ class helper:
         return set(x for x in _units if x.owner == ownerKey)
         
     def byteToUnitType(byteKey):
-        for item in _unitTypes.items():
+        for item in _unitTypes.values():
             if item.byteKey == byteKey:
                 return item
         return None
