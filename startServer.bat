@@ -1,2 +1,2 @@
-python server/server.py -i
+python main.py -startServer
 PAUSE

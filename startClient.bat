@@ -1,2 +1,2 @@
-python client/client.py -i
+python main.py -startClient
 PAUSE
