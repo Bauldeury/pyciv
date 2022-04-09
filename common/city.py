@@ -1,5 +1,5 @@
-import building
-import civilization
+from . import building
+from . import civilization
 
 _cities = {}
 class city:

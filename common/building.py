@@ -1,10 +1,12 @@
 import csv
-import common
+
+from . import common
 
 _buildings = {}
 class _building:
     def __init__(self, key):
         self.key = key
+        self.byteKey = int.to_bytes(len(_buildings),length=1,byteorder='big')
         self.name = "Unnamed Building"
         self.description = "Default building description."
         self.hammerCost = 50
@@ -25,7 +27,7 @@ class _building:
         return self.hammerCost
 
 def _loadBuidings():
-    with open("buildings.csv", newline ="") as csvfile:
+    with open(common.getCommonPath()+"buildings.csv", newline ="") as csvfile:
         reader = csv.reader(csvfile, delimiter=';')
         for row in reader:
             if row[0] != "key":
@@ -132,5 +134,13 @@ class buildingSet:
     @property
     def tile(self):
         return city.tile
+
+class helper:
+    def byteToBuilding(byteKey):
+        for item in _buildings.items():
+            if item.byteKey == byteKey:
+                return item
+        return None
+
 
 _loadBuidings()

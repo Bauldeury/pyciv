@@ -1,9 +1,12 @@
 import csv
 
+from . import common
+
 _techs = {}
 class tech:
     def __init__(self,key):
         self.key = key
+        self.byteKey = int.to_bytes(len(_techs),length=1,byteorder='big')
         _techs[self.key] = self
         
         self.name = "TechName"
@@ -13,7 +16,7 @@ class tech:
         
         
 def _loadTechs():
-    with open("techs.csv", newline ="") as csvfile:
+    with open(common.getCommonPath()+"techs.csv", newline ="") as csvfile:
         reader = csv.reader(csvfile, delimiter=';')
         for row in reader:
             if row[0] != "key":
@@ -84,4 +87,11 @@ class techSet:
     def contains(self,techKey):
         return (techKey in self._ths)
     
+class helper:
+    def byteToTech(byteKey):
+        for item in _techs.items():
+            if item.byteKey == byteKey:
+                return item
+        return None
+        
 _loadTechs()

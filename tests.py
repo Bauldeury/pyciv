@@ -273,10 +273,10 @@ def runTests(verbose = False):
     messages = []
     print("##### TESTS START")
     messages += testTileComputation(verbose)
-    messages += testCSVLoad(verbose,"terrains.csv","key;name;description;foodYield;productionYield;commerceYield;travelCost;defensiveBonus;availableFeatures;terrainType")
-    messages += testCSVLoad(verbose,"features.csv","key;terrain;name;description;requires;constraints;type;workAmount;specials")
-    messages += testCSVLoad(verbose,"buildings.csv","key;name;description;hammerCost;maintenance;requires;obsoletedBy;specials")
-    messages += testCSVLoad(verbose,"techs.csv","key;name;description;cost;requires")
+    messages += testCSVLoad(verbose,"common/terrains.csv","key;name;description;foodYield;productionYield;commerceYield;travelCost;defensiveBonus;availableFeatures;terrainType")
+    messages += testCSVLoad(verbose,"common/features.csv","key;terrain;name;description;requires;constraints;type;workAmount;specials")
+    messages += testCSVLoad(verbose,"common/buildings.csv","key;name;description;hammerCost;maintenance;requires;obsoletedBy;specials")
+    messages += testCSVLoad(verbose,"common/techs.csv","key;name;description;cost;requires")
     
     messages += testBuildings(verbose)
     messages += testTechs(verbose)

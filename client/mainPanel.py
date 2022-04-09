@@ -1,4 +1,5 @@
 import tkinter as tk
+import client
 
 class mainPanel(tk.Tk):
     def __init__(self,client):

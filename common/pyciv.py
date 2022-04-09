@@ -5,14 +5,14 @@ print("|  __/   |  |  | |___  | |   \ \/ /  ")
 print("|_|      |__|   \____//___/   \__/   ")
 print()
        
-import civilization  
-import tech
-import mymap
+from . import civilization  
+from . import tech
+from . import mymap
 
-import city
-import building
+from . import city
+from . import building
 
-import unit
+from . import unit
 
 #vars
 

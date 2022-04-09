@@ -1,9 +1,14 @@
 import csv
 
+from . import common
+
 _unitTypes = {}
 class _unitType:
     def __init__(self):
         self.key = "UNITTYPE_KEY"
+        self.byteKey = int.to_bytes(len(_unitTypes),length=1,byteorder='big')
+        _unitTypes[self.key] = self
+        
         self.name = "UnittypeName"
         
         self.maxLife = 10
@@ -70,3 +75,9 @@ class helper:
         
     def getUnitsOfOwner(ownerKey):
         return set(x for x in _units if x.owner == ownerKey)
+        
+    def byteToUnitType(byteKey):
+        for item in _unitTypes.items():
+            if item.byteKey == byteKey:
+                return item
+        return None

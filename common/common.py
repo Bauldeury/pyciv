@@ -74,3 +74,11 @@ def getSpecialValueMin(items,searchedItem):
                         if (output == None or output > inspectedValue):
                             output = inspectedValue
         return output
+        
+def getCommonPath():
+    if __package__ == None:
+        return ""
+    elif __package__ == "common":
+        return "common/"
+    
+print (__name__)

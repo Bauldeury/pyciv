@@ -1,11 +1,13 @@
 import csv
-import common
 import math
+
+from . import common
 
 _terrains = {}
 class _terrain:
     def __init__(self, key):
         self.key = key
+        self.byteKey = int.to_bytes(len(_terrains),length=1,byteorder='big')
         self.name = "TerrainName"
         self.description = "TerrainDescription"
         self.foodYield = 0
@@ -24,6 +26,7 @@ _features = {}
 class _feature:
     def __init__(self,key):
         self.key = key
+        self.byteKey = int.to_bytes(len(_features),length=1,byteorder='big')
         self.name = "FeatureName"
         self.description = "FeatureDescription"
         self.requires = None
@@ -38,7 +41,7 @@ class _feature:
 
 
 def _loadTerrains():
-    with open("terrains.csv", newline ="") as csvfile:
+    with open(common.getCommonPath()+"terrains.csv", newline ="") as csvfile:
         reader = csv.reader(csvfile, delimiter=';')
         for row in reader:
             if row[0] != "key":
@@ -56,7 +59,7 @@ def _loadTerrains():
                 t.ttype = int(row[9])
                 
 def _loadFeatures():
-    with open("features.csv", newline ="") as csvfile:
+    with open(common.getCommonPath()+"features.csv", newline ="") as csvfile:
         reader = csv.reader(csvfile, delimiter=';')
         for row in reader:
             if row[0] != "key":
@@ -214,6 +217,19 @@ class helper:
         return abs(pos1[0]-pos2[0])+abs(pos1[1]-pos2[1])
     def chebyshevDistance(pos1,pos2):
         return max(abs(pos1[0]-pos2[0]),abs(pos1[1]-pos2[1]))
+       
+        
+    def byteToTerrain(byteKey):
+        for item in _terrains.items():
+            if item.byteKey == byteKey:
+                return item
+        return None
+        
+    def byteToFeature(byteKey):
+        for item in _features.items():
+            if item.byteKey == byteKey:
+                return item
+        return None
     
     
         
