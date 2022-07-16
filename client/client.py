@@ -1,7 +1,7 @@
 import socket
 import select
 
-from mainPanel import mainPanel
+from .mainPanel import mainPanel
 
 class clientApp():
     def __init__(self):
@@ -36,13 +36,17 @@ class clientApp():
             # self.ssocket.setblocking(0)
             rsock, wsock, esock = select.select([self.ssocket],[],[],0.02)
             for sock in rsock:
-                response = sock.recv(256).decode()
+                response = sock.recv(256)
                 if response != b"":
-                    executeInfo(response)
+                    self.executeInfo(response)
   
-    def executeInfo(self,info):
-        print(info)
-        self.pMain.printChat(info)
+    def executeInfo(self,encoded_info):
+        '''Info must be encoded'''
+        print(encoded_info)
+        info = encoded_info.decode()
+
+        if info[0:3].lower() == "ch ": #chat
+            self.pMain.printChat(info[3:])
         
     def sendCmd(self,cmd):
         self.ssocket.send(cmd.encode())

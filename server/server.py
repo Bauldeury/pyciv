@@ -1,13 +1,14 @@
 import socket
-import threading
 
 import common.pyciv
+from .connectionThread import *
 
 class server:
 
     def __init__(self):
         self.connectionThreads = set()
         self.listening = False
+
         
         self.sock = socket.socket()
         host = ""
@@ -49,61 +50,21 @@ class server:
             self.connectionThreads.remove(thread)
             # print(self.connectionThreads)
 
+    def executeCmd(self,encoded_cmd):
+        '''Cmd must be encoded'''
+
+        cmd = encoded_cmd.decode()
+        if cmd[0:3].lower() == "ch ": #chat
+            self.broadcastInfo(encoded_cmd)
         
     def broadcastInfo(self,info):
+        '''Info must be encoded'''
         for x in self.connectionThreads:
-            x.sendInfo(info)
+            x.executeInfo(info)
 
 
     
-class connectionThread(threading.Thread):
-    def __init__(self,server,conn,ip,port):
-        threading.Thread.__init__(self)
-        self.server = server
-        self.conn = conn
-        self.ip = ip
-        self.port = port
-        
-        print("[+] Nouveau thread pour {}:{}".format(self.ip, self.port))
-        
-    def run(self):
-        #ask authentification (civkey)
-        #receive auth
-        self.civkey = "TODO"
-        #setup connectionThread
-
-        msg = ""
-   
-        while True:
-            try:
-                message = self.conn.recv(256)
-                if message:
-                    self.executeCmd(message)
-                else:
-                    print("clean disconnect [type 1]")
-                    break
-            except:
-                print("connection interrupted [type 2]")
-                break 
-        self.stop()
-
-    
-    def executeCmd(self,cmd):
-        print("{}:{}>>{}".format(self.ip,self.port,cmd.decode()))
-        
-    def sendInfo(self, info):
-        try:
-            conn.send(message)
-        except:
-            conn.close()
-            print("connection interrupted [type 3]")
-            remove(conn)
-
-    def stop(self,msg = "No msg"):
-        self.conn.close()
-        print("[-] Fin du thread pour {}:{}".format(self.ip, self.port))
-        self.server.removeConnectionThread(self)
-        
+      
         
 def main():
     s = server()
