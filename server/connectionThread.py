@@ -1,4 +1,5 @@
 import threading
+import server
 
 class connectionThread(threading.Thread):
     def __init__(self,server,conn,ip,port):
@@ -11,11 +12,6 @@ class connectionThread(threading.Thread):
         print("[+] Nouveau thread pour {}:{}".format(self.ip, self.port))
         
     def run(self):
-        #ask authentification (civkey)
-        #receive auth
-        self.civkey = "TODO"
-        #setup connectionThread
-
         msg = ""
    
         while True:
@@ -26,7 +22,8 @@ class connectionThread(threading.Thread):
                 else:
                     print("clean disconnect [type 1]")
                     break
-            except:
+            except Exception as e:
+                print(e)
                 print("connection interrupted [type 2]")
                 break 
         self.stop()
@@ -45,8 +42,7 @@ class connectionThread(threading.Thread):
             self.broadcastCmd(encoded_cmd)
 
         else:
-            print("cmd unknown")
-            self.sendInfo("cmd unknown".encode)
+            self.server.executeCmd(self, encoded_cmd)
 
     def executeInfo(self, info):
         '''info must be encoded'''
@@ -59,11 +55,11 @@ class connectionThread(threading.Thread):
         except:
             self.conn.close()
             print("connection interrupted [type 3]")
-            self.remove(self.conn)
+            # self.remove(self.conn)
 
     def broadcastCmd(self,cmd):
         '''Cmd must be encoded'''
-        self.server.executeCmd(cmd)
+        self.server.executeCmd(self,cmd)
 
     def stop(self,msg = "No msg"):
         self.conn.close()
