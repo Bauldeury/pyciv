@@ -1,5 +1,5 @@
 import tkinter as tk
-import client
+from .consolePanel import consolePanel
 
 class mainPanel(tk.Tk):
     def __init__(self,client):
@@ -16,32 +16,48 @@ class mainPanel(tk.Tk):
     def _initWidgets(self):  
         self.geometry("800x600")
         self.config(padx = 5,pady = 5)
-    
+
+        #root
         self.f_main = tk.Frame(self)
         self.f_main.config(bg="RED", relief=tk.SUNKEN)
         self.f_main.pack(side=tk.LEFT,padx = 5,pady = 5, expand=True,fill = 'both')
         
-        self.f_details = tk.Frame(self)
-        self.f_details.config(bg="BLUE", relief=tk.SUNKEN)
+        #root>>rightPanel
+        self.rightPanel = tk.Frame(self)
+        self.rightPanel.config(bg="BLUE", relief=tk.SUNKEN)
+        self.rightPanel.pack(side=tk.LEFT,padx = 5,pady = 5, expand=False,fill = 'both')
     
-        self.m_chatView = tk.Message(self.f_details, text="lorem", relief=tk.SUNKEN, bg = "WHITE")
-        self.e_chatEntry = tk.Entry(self.f_details)
-        self.b_send = tk.Button(self.f_details, text="envoyer", command=self.press_button)
+        #root>>rightPanel>>consolePanel
+        self.consolePanel = consolePanel(self.rightPanel)
+        self.consolePanel.pack()
 
-        self.m_chatView.pack(expand=True, fill='both')
-        self.e_chatEntry.pack(side=tk.LEFT,expand=True, fill = 'x')
-        self.b_send.pack(side=tk.RIGHT)
+        #root>>rightPanel>>consoleInputField
+        self.consoleInputField = tk.Entry(self.rightPanel)
+        self.consoleInputField.bind('<KeyPress>',self.onKeyPress)
+        self.consoleInputField.pack(side=tk.LEFT,expand=True, fill = 'x')
+
+        #root>>rightPanel>>consoleInputSendButton
+        self.consoleInputSendButton = tk.Button(self.rightPanel, text="envoyer", command=self.press_button)
+        self.consoleInputSendButton.pack(side=tk.RIGHT)
         
-        self.f_details.pack(side=tk.LEFT,padx = 5,pady = 5, expand=False,fill = 'both')
         
-                
+    def onKeyPress(self,event):
+        # print("Key {} pressed".format(event.char))
+        if event.char.lower() == '\r': #key enter
+            print("enter pressed!")
+            self.send_cmd()
         
     def press_button(self):
         print("button pressed!")
-        message = self.e_chatEntry.get()
+        self.send_cmd()
+
+    def send_cmd(self):
+        message = self.consoleInputField.get()
         if message != "":
-            self.e_chatEntry.delete(0,tk.END)
+            self.consoleInputField.delete(0,tk.END)
             self.client.sendCmd(message)
+
+
             
-    def printChat(self,message):
-        self.m_chatView.config(text=message)
+    def printConsole(self,message: str):
+        self.consolePanel.print(message)

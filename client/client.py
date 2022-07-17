@@ -46,7 +46,7 @@ class clientApp():
         info = encoded_info.decode()
 
         if info[0:3].lower() == "ch ": #chat
-            self.pMain.printChat(info[3:])
+            self.pMain.printConsole(info[3:])
         
     def sendCmd(self,cmd):
         self.ssocket.send(cmd.encode())
