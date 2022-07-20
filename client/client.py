@@ -41,14 +41,17 @@ class clientApp():
                     self.executeInfo(response)
   
     def executeInfo(self,encoded_info):
-        '''Info must be encoded'''
+        '''from CONNECTIONTHREAD(server) to CLIENT'''
+
         print(encoded_info)
         info = encoded_info.decode()
 
         if info[0:3].lower() == "ch ": #chat
             self.pMain.printConsole(info[3:])
         
+
     def sendCmd(self,cmd):
+        '''from CLIENT to CONNECTION THREAD(server)'''
         self.ssocket.send(cmd.encode())
 
    

@@ -1,4 +1,6 @@
 import tkinter as tk
+
+import client
 from .consolePanel import consolePanel
 
 class mainPanel(tk.Tk):

@@ -2,13 +2,21 @@ _civilizations = {}
 _endTurnListener = set()
 
 class civilization:
-    _civilizationsNextKey = 0
     
-    def __init__(self):
-        self.key = civilization._civilizationsNextKey
-        civilization._civilizationsNextKey += 1
-        _civilizations[self.key] = self
+    def __init__(self,key = "NEW"):
+        '''Civilization constructor
         
+        key -- unique ID. Leave "NEW" to auto-attribute the next id.'''
+        if key == "NEW":
+            key = 0
+            while key in _civilizations:
+                key += 1
+
+            self.key = key
+        else:
+            self.key = key
+
+        _civilizations[self.key] = self
         self.canDoDiplomacy = True
         
         self.name = "CivName"

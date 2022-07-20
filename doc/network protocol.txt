@@ -1,0 +1,23 @@
+(commands aren't case sensitive)
+
+CONNECTIONTHREADS LEVEL COMMANDS
+ping: will answer "pong"
+(else): goes to server level
+
+SERVER LEVEL COMMANDS
+ch text: will broadcast down "ch text" to the all clients
+bindnew: bind the thread to the first available playerId
+bind x: try to bind the thread to the playerId x, where x in [0;255]
+unbind: unbind the playerId from the thread
+(else): if binded, goes to game. If non binded, loops back an error
+
+GAME LEVEL COMMANDS
+none, will send to playerHELPER
+
+PLAYER HELPER COMMANDS
+createplayer: Create a player for a binded thread. Only callable from the server
+deleteplayer: Delete a player for a binded thread. Only callable from the server
+(else): will send to the according PLAYER of the playerId of the thread
+
+PLAYER
+ping player: will answer "player pong"
