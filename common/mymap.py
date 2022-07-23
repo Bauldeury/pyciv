@@ -186,7 +186,7 @@ class mymap:
         if helper.chebyshevDistance(pos1,pos2) != 1:
             return None
         else:
-            return max(getTile[pos1].travelCost,getTile[pos2].travelCost)
+            return max(self.getTile[pos1].travelCost,self.getTile[pos2].travelCost)
         
             
 class helper:
@@ -209,7 +209,7 @@ class helper:
         return (pos[0]+1,pos[1]-1)
         
     def posNeighboors(pos):
-        return [offsetN(pos),offsetNE(pos),offsetE(pos),offsetSE(pos),offsetS(pos),offsetSW(pos),offsetW(pos),offsetNW(pos)]
+        return [helper.offsetN(pos),helper.offsetNE(pos),helper.offsetE(pos),helper.offsetSE(pos),helper.offsetS(pos),helper.offsetSW(pos),helper.offsetW(pos),helper.offsetNW(pos)]
             
     def euclidianDistance(pos1,pos2):
         return math.sqrt(abs(pos1[0]-pos2[0])**2+abs(pos1[1]-pos2[1])**2)

@@ -13,13 +13,17 @@ class connectionThread(threading.Thread):
         print("[+] Nouveau thread pour {}:{}".format(self.ip, self.port))
         
     def run(self):
-        msg = ""
+        buffer = b''
+    
    
         while True:
             try:
                 message = self.conn.recv(256)
-                if message:
-                    self.executeCmd(message)
+                if message != b'':
+                    buffer += message
+                    if buffer[-1] == 4:#EOT ASCII CHAR
+                        self.executeCmd(buffer)
+                        buffer = b''
                 else:
                     print("clean disconnect [type 1]")
                     break
@@ -35,8 +39,8 @@ class connectionThread(threading.Thread):
         '''from CLIENT to CONNECTIONTHREAD
         
         Cmd must be encoded'''
-        cmd = encoded_cmd.decode()
-        print("{}:{}>>{}".format(self.ip,self.port,cmd))
+        print("{}:{}>>{}".format(self.ip,self.port,encoded_cmd))
+        cmd = encoded_cmd.decode()[:-1]
 
         if cmd.lower() == "ping":
             self._sendInfo("pong")
@@ -56,8 +60,8 @@ class connectionThread(threading.Thread):
         
     def _sendInfo(self, info:str):
         '''from CONNECTIONTHREAD to CLIENT'''
-        print("{}:{}<<{}".format(self.ip,self.port,info))
-        encoded_info = info.encode()
+        encoded_info = info.encode() +b'\x04'
+        print("{}:{}<<{}".format(self.ip,self.port,encoded_info))
         try:
             self.conn.send(encoded_info)
         except:

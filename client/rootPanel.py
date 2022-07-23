@@ -1,9 +1,10 @@
 import tkinter as tk
 
 import client
+from .mapPanel import mapPanel
 from .consolePanel import consolePanel
 
-class mainPanel(tk.Tk):
+class rootPanel(tk.Tk):
     def __init__(self,client):
         tk.Tk.__init__(self)
         
@@ -19,10 +20,14 @@ class mainPanel(tk.Tk):
         self.geometry("800x600")
         self.config(padx = 5,pady = 5)
 
-        #root
-        self.f_main = tk.Frame(self)
-        self.f_main.config(bg="RED", relief=tk.SUNKEN)
-        self.f_main.pack(side=tk.LEFT,padx = 5,pady = 5, expand=True,fill = 'both')
+        #root>>mainPanel
+        self.mainPanel = tk.Frame(self)
+        self.mainPanel.config(bg="RED", relief=tk.SUNKEN)
+        self.mainPanel.pack(side=tk.LEFT,padx = 5,pady = 5, expand=True,fill = 'both')
+
+        #root>>mainPanel>>mapPanel
+        self.mainPanel = mapPanel(self.mainPanel)
+        self.mainPanel.pack()
         
         #root>>rightPanel
         self.rightPanel = tk.Frame(self)

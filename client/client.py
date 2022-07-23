@@ -1,11 +1,11 @@
 import socket
 import select
 
-from .mainPanel import mainPanel
+from .rootPanel import rootPanel
 
 class clientApp():
     def __init__(self):
-        self.pMain = mainPanel(self)
+        self.pMain = rootPanel(self)
         self.pMain.protocol("WM_DELETE_WINDOW", self.stop)
         
         self._connect()
@@ -28,6 +28,7 @@ class clientApp():
     def start(self):
         self.quitflag = False
 
+        buffer = b''
         while True:
             self.pMain.update()
             if self.quitflag:
@@ -37,14 +38,20 @@ class clientApp():
             rsock, wsock, esock = select.select([self.ssocket],[],[],0.02)
             for sock in rsock:
                 response = sock.recv(256)
-                if response != b"":
-                    self.executeInfo(response)
+                if response != b'':
+                    buffer = buffer+response
+                    if buffer[-1] == 4:#EOT ASCII CHAR
+                        self.executeInfo(buffer)
+                        buffer = b''
+                else:
+                    print("clean disconnect [type 1]")
+                    break
   
     def executeInfo(self,encoded_info):
         '''from CONNECTIONTHREAD(server) to CLIENT'''
 
-        print(encoded_info)
-        info = encoded_info.decode()
+        print('SERVER >> {}'.format(encoded_info))
+        info = encoded_info.decode()[:-1]
 
         if info[0:3].lower() == "ch ": #chat
             self.pMain.printConsole(info[3:])
@@ -52,7 +59,9 @@ class clientApp():
 
     def sendCmd(self,cmd):
         '''from CLIENT to CONNECTION THREAD(server)'''
-        self.ssocket.send(cmd.encode())
+        encoded_cmd = cmd.encode()+b'\x04'
+        print('SERVER << {}'.format(encoded_cmd))
+        self.ssocket.send(encoded_cmd)
 
    
 def main():

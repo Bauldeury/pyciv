@@ -1,7 +1,9 @@
 (commands aren't case sensitive)
+(commands end with '\x04' = chr(4) = end of transmission)
 
 CONNECTIONTHREADS LEVEL COMMANDS
 ping: will answer "pong"
+
 (else): goes to server level
 
 SERVER LEVEL COMMANDS
@@ -14,10 +16,12 @@ unbind: unbind the playerId from the thread
 GAME LEVEL COMMANDS
 none, will send to playerHELPER
 
-PLAYER HELPER COMMANDS
+PLAYER HELPER LEVEL COMMANDS
 createplayer: Create a player for a binded thread. Only callable from the server
 deleteplayer: Delete a player for a binded thread. Only callable from the server
 (else): will send to the according PLAYER of the playerId of the thread
 
-PLAYER
+PLAYER LEVEL COMMANDS
 ping player: will answer "player pong"
+get tile x1 y1 ... xn yn: will answer "return tile TILE-INFO1 ... TILE-INFOn"
+(else): loops back an error
