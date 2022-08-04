@@ -23,5 +23,6 @@ deleteplayer: Delete a player for a binded thread. Only callable from the server
 
 PLAYER LEVEL COMMANDS
 ping player: will answer "player pong"
-get tile x1 y1 ... xn yn: will answer "return tile TILE-INFO1 ... TILE-INFOn"
+gettile x1 y1 ... xn yn: will answer "returntile TILE-INFO1 ... TILE-INFOn"
+    TILE-INFO: terrainID, featureID..., featureID, 'u'unitID, 'c'cityID
 (else): loops back an error

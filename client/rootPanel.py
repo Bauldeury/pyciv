@@ -20,32 +20,47 @@ class rootPanel(tk.Tk):
         self.geometry("800x600")
         self.config(padx = 5,pady = 5)
 
+        #root
+        self.rowconfigure(0,weight=1, minsize= 300)
+        self.columnconfigure(0, weight= 3, minsize=300)
+        self.columnconfigure(1, weight= 1, minsize=100)
+
         #root>>mainPanel
         self.mainPanel = tk.Frame(self)
+        self.mainPanel.columnconfigure(0,weight= 1)
+        self.mainPanel.rowconfigure(0,weight= 1)
         self.mainPanel.config(bg="RED", relief=tk.SUNKEN)
-        self.mainPanel.pack(side=tk.LEFT,padx = 5,pady = 5, expand=True,fill = 'both')
+        self.mainPanel.grid(row=0,column=0,sticky='nsew')
 
         #root>>mainPanel>>mapPanel
         self.mainPanel = mapPanel(self.mainPanel)
-        self.mainPanel.pack()
+        self.mainPanel.grid(row=0,column=0,sticky='nsew')
         
         #root>>rightPanel
         self.rightPanel = tk.Frame(self)
         self.rightPanel.config(bg="BLUE", relief=tk.SUNKEN)
-        self.rightPanel.pack(side=tk.LEFT,padx = 5,pady = 5, expand=False,fill = 'both')
+        self.rightPanel.grid(row=0,column=1,sticky='nsew')
     
         #root>>rightPanel>>consolePanel
         self.consolePanel = consolePanel(self.rightPanel)
-        self.consolePanel.pack()
+        # self.consolePanel.pack()
+        self.consolePanel.grid(row=0,column=0,sticky='ew')
 
-        #root>>rightPanel>>consoleInputField
-        self.consoleInputField = tk.Entry(self.rightPanel)
+
+        #root>>rightPanel>>consoleInput
+        self.consoleInput = tk.Frame(self.rightPanel)
+        self.consoleInput.grid(row=1,column=0,sticky='ew')
+
+        #root>>rightPanel>>consoleInput>>consoleInputField
+        self.consoleInputField = tk.Entry(self.consoleInput)
         self.consoleInputField.bind('<KeyPress>',self.onKeyPress)
-        self.consoleInputField.pack(side=tk.LEFT,expand=True, fill = 'x')
+        # self.consoleInputField.pack(side=tk.LEFT,expand=True, fill = 'x')
+        self.consoleInputField.grid(row=0,column=0)
 
-        #root>>rightPanel>>consoleInputSendButton
-        self.consoleInputSendButton = tk.Button(self.rightPanel, text="envoyer", command=self.press_button)
-        self.consoleInputSendButton.pack(side=tk.RIGHT)
+        #root>>rightPanel>>consoleInput>>consoleInputSendButton
+        self.consoleInputSendButton = tk.Button(self.consoleInput, text="envoyer", command=self.press_button)
+        # self.consoleInputSendButton.pack(side=tk.RIGHT)
+        self.consoleInputSendButton.grid(row=0,column=1)
         
         
     def onKeyPress(self,event):
