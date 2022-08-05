@@ -10,11 +10,13 @@ SERVER LEVEL COMMANDS
 ch text: will broadcast down "ch text" to the all clients
 bindnew: bind the thread to the first available playerId
 bind x: try to bind the thread to the playerId x, where x in [0;255]
+getbind: return "returnbind x", where x is the threadID or "None"
 unbind: unbind the playerId from the thread
 (else): if binded, goes to game. If non binded, loops back an error
 
 GAME LEVEL COMMANDS
-none, will send to playerHELPER
+getmapsize: answer 'mapsize X Y'
+(else): will send to playerHELPER
 
 PLAYER HELPER LEVEL COMMANDS
 createplayer: Create a player for a binded thread. Only callable from the server
@@ -24,5 +26,5 @@ deleteplayer: Delete a player for a binded thread. Only callable from the server
 PLAYER LEVEL COMMANDS
 ping player: will answer "player pong"
 gettile x1 y1 ... xn yn: will answer "returntile TILE-INFO1 ... TILE-INFOn"
-    TILE-INFO: terrainID, featureID..., featureID, 'u'unitID, 'c'cityID
+    TILE-INFO: terrainID(or 255 for fog of war), featureID..., featureID, 'u'unitID, 'c'cityID
 (else): loops back an error

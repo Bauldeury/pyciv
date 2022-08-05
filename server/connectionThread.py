@@ -3,12 +3,16 @@ import traceback
 import server
 
 class connectionThread(threading.Thread):
+
     def __init__(self,server,conn,ip,port):
         threading.Thread.__init__(self)
         self.server: server = server
         self.conn = conn
         self.ip = ip
         self.port = port
+
+        self.playerID = None
+        self.playerName = "UT" #UT: Unbound Thread
         
         print("[+] Nouveau thread pour {}:{}".format(self.ip, self.port))
         

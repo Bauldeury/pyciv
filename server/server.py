@@ -7,10 +7,8 @@ from .connectionThread import *
 class server:
 
     def __init__(self):
-        self.connectionThreads = set()
+        self.connectionThreads:set[connectionThread] = set()
         self.listening = False
-        self.players_connectionThread = dict() #key is playerId: int, value is connectionThread
-        self.connectionThread_players = dict() #same but reversed because i'm lazy
         
         self.sock = socket.socket()
         host = ""
@@ -50,37 +48,43 @@ class server:
         thread.start()
        
     def removeConnectionThread(self, thread: connectionThread):
-        if thread in self.connectionThread_players:
+        if thread.playerID != None:
             self.unbindConnectionToPlayer(thread)
 
         if thread in self.connectionThreads:
             self.connectionThreads.remove(thread)
 
+    def _playerIDtoThread(self, playerID: int):
+        '''returns the thread or -None- if not found'''
+        for thread in self.connectionThreads:
+            if thread.playerID == playerID:
+                return thread
+        return None
+
+
     def bindConnectionToNewPlayer(self, thread: connectionThread):
         i = 0
-        while i in self.players_connectionThread:
+        while self._playerIDtoThread(i) != None:
             i+=1
 
         self.bindConnectionToPlayer(thread, i)
 
     def bindConnectionToPlayer(self, thread: connectionThread, playerId: int):
-        if playerId > 255:
-            thread.executeInfo(("error: playerId {} out of bounds".format(playerId)))
-        elif playerId in self.players_connectionThread:
-            thread.executeInfo(("error: playerId {} already binded".format(playerId)))
-        elif thread in self.connectionThread_players:
-            thread.executeInfo(("error: connection already binded".format(playerId)))
+        if self._playerIDtoThread(playerId) != None:
+            thread.executeInfo(("error: playerId {} already bound".format(playerId)))
+        elif thread.playerID != None:
+            thread.executeInfo(("error: connection already bound".format(playerId)))
         else:
             self._sendCmd(playerId,"createplayer")
-            self.players_connectionThread[playerId] = thread
-            self.connectionThread_players[thread] = playerId
+            thread.playerID = playerId
+            thread.playerName = "player#{}".format(playerId)
             thread.executeInfo(("playerId {} successfully granted".format(playerId)))
 
     def unbindConnectionToPlayer(self, thread: connectionThread):
-        playerId = self.connectionThread_players[thread]
+        playerId = thread.playerID
         self._sendCmd(playerId,"deleteplayer")
-        del self.players_connectionThread[playerId]
-        del self.connectionThread_players[thread]
+        thread.playerID = None
+        thread.playerName = "UT"
         thread.executeInfo(("playerId {} successfully revoked".format(playerId)))
 
 
@@ -88,7 +92,7 @@ class server:
         '''From THREAD to SERVER'''
 
         if cmd[0:3].lower() == "ch ": #chat
-            self._sendInfo("ALL",cmd)
+            self._sendInfo("ALL","ch " + sender.playerName + ": " + cmd[3:])
 
         elif cmd.lower() == "bindnew": #new player
             self.bindConnectionToNewPlayer(sender)
@@ -104,8 +108,11 @@ class server:
             else:
                 sender.executeInfo("error: {} is unvalid integer".format(id))
 
+        elif cmd.lower() == "getbind":
+            self._sendInfo({sender},"returnbind {}".format(sender.playerID))
+
         elif cmd.lower() == "unbind":
-            if sender in self.connectionThread_players:
+            if sender.playerID != None:
                 self.unbindConnectionToPlayer(sender)
             else:
                 sender.executeInfo("error: no playerId to unbind")
@@ -116,8 +123,8 @@ class server:
             sender.executeInfo("error: forbidden command")
 
         else:
-            if sender in self.connectionThread_players:
-                self._sendCmd(self.connectionThread_players[sender],cmd)
+            if sender.playerID != None:
+                self._sendCmd(sender.playerID,cmd)
             else:
                 sender.executeInfo("error: cmd not understood at the server level")
 
@@ -136,7 +143,7 @@ class server:
         else:
             threads = []
             for playerId in target:
-                threads.append(self.players_connectionThread[playerId])
+                threads.append(self._playerIDtoThread(playerId))
             self._sendInfo(threads,info)
 
     def _sendInfo(self,target,info:str):

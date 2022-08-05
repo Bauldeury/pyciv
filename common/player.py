@@ -1,15 +1,16 @@
-_players = {}
-
 class player:
+    _players = {}
+
     def __init__(self,playerId):
-        if playerId in _players:
+        if playerId in player._players:
             raise Exception("PlayerID already existing")
 
         self.playerId = playerId
-        _players[self.playerId] = self
+        player._players[self.playerId] = self
 
     def __del__(self):
-        del _players[self.playerId]
+        if self.playerId in player._players: #most of the time no, it's called from the player helper and already deleted
+            del player._players[self.playerId]
 
     def __repr__(self):
         return "C_player#{}".format(self.playerId)
@@ -37,13 +38,13 @@ class helper:
         if cmd.lower() == "createplayer":
             player(playerId)
         elif cmd.lower() == "deleteplayer":
-            del _players[playerId]
+            del player._players[playerId]
         else:
             helper._sendCmd(playerId,cmd)
 
     def _sendCmd(playerId:int,cmd:str):
         '''from PLAYERHELPER to PLAYER'''
-        _players[playerId].executeCmd(cmd)
+        player._players[playerId].executeCmd(cmd)
 
     def executeInfo(sender:player,info:str):
         '''from PLAYER to PLAYERHELPER

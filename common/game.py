@@ -67,7 +67,11 @@ class game:
     #networking
     def executeCmd(self,sender: int,cmd:str):
         '''from SERVER to GAME'''
-        self._sendCmd(sender,cmd)
+
+        if cmd == "getmapsize":
+            self._sendInfo({sender},"mapsize {} {}".format(self.mp.sizeX,self.mp.sizeY))
+        else:
+            self._sendCmd(sender,cmd)
 
     def _sendCmd(self,playerId:int,cmd:str):
         '''from GAME to PLAYERHELPER'''
