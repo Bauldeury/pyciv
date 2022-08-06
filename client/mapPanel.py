@@ -10,15 +10,14 @@ class mapPanel(tk.Frame):
     '''unit is pixels'''
 
 
-    def __init__(self,parent):
+    def __init__(self,parent,sendCmd_func):
         tk.Frame.__init__(self,parent, relief=tk.SUNKEN, bg = "WHITE")
         
-        #initial zoom
         self.zoom:int = 2
         self.playerID = None
+        self.sendCmd_func = sendCmd_func
 
-        self.mymap = mymap.mymap(25,25)
-        self.mymap.tiles[(1,1)].addFeature("ROAD")
+        self.mymap = None
 
         self.xscroll = tk.Scrollbar(self,orient='horizontal')
         self.yscroll = tk.Scrollbar(self,orient='vertical')
@@ -56,17 +55,22 @@ class mapPanel(tk.Frame):
 
 
     def Draw(self):
-        if self.playerID != None:
+        if self.playerID == None:
+            self.pic = Image.new(mode='RGB',size=(256,128),color=(0,0,0))
+            drawer = ImageDraw.Draw(self.pic)
+            myFont = ImageFont.truetype('client/assets/fonts/TitilliumWeb-Regular.ttf', 24)
+            drawer.text((2,2),"Unbound",font = myFont, fill=(255,255,255))
+        elif self.mymap == None:
+            self.pic = Image.new(mode='RGB',size=(256,128),color=(0,0,0))
+            drawer = ImageDraw.Draw(self.pic)
+            myFont = ImageFont.truetype('client/assets/fonts/TitilliumWeb-Regular.ttf', 24)
+            drawer.text((2,2),"ERROR:NoMap",font = myFont, fill=(255,0,0))
+        else:
             self.pic = Image.new(mode="RGB",size=(mapPanel.TILE_SIZE*self.mymap.sizeX*self.zoom,mapPanel.TILE_SIZE*self.mymap.sizeY*self.zoom))
 
             for (x,y) in self.mymap.tiles:
                 self._SetTile(self.pic,(x,y),self.mymap.tiles[(x,y)])
 
-        else:
-            self.pic = Image.new(mode='RGB',size=(256,128),color=(0,0,0))
-            drawer = ImageDraw.Draw(self.pic)
-            myFont = ImageFont.truetype('client/assets/fonts/TitilliumWeb-Regular.ttf', 24)
-            drawer.text((2,2),"Unbound",font = myFont, fill=(255,0,0))
 
 
         self.tkpic= ImageTk.PhotoImage(self.pic)
@@ -108,11 +112,14 @@ class mapPanel(tk.Frame):
         
     def onBind(self,playerID:int):
         self.playerID = playerID
-        self.Draw()
+        self.Draw() #too early to draw, don't know the size yet
         self._refreshScrollers()
 
         #init interaction
         self.canvas.bind("<Button-1>",self._onClick)
+
+        #get initial infos
+        self.sendCmd("getmapsize")
 
     def onUnbind(self):
         self.playerID = None
@@ -128,6 +135,17 @@ class mapPanel(tk.Frame):
         #initial scroll
         self.canvas.xview_moveto(0)
         self.canvas.yview_moveto(0)
+
+    def executeInfo(self,info:str):
+        if info[0:14] == "returnmapsize ":
+            _,x,y = info.split(' ')
+            self.mymap = mymap.mymap(int(x),int(y))
+            self.Draw()
+            self._refreshScrollers()
+
+
+    def sendCmd(self,cmd:str):
+        self.sendCmd_func(cmd)
 
 
 class MapSpriteHelper:

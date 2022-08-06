@@ -69,7 +69,7 @@ class game:
         '''from SERVER to GAME'''
 
         if cmd == "getmapsize":
-            self._sendInfo({sender},"mapsize {} {}".format(self.mp.sizeX,self.mp.sizeY))
+            self._sendInfo({sender},"returnmapsize {} {}".format(self.mp.sizeX,self.mp.sizeY))
         else:
             self._sendCmd(sender,cmd)
 
@@ -97,7 +97,7 @@ class game:
 
     def _loadScenario1(self):
         self.currentYear = -8000
-        self.mp = mymap.mymap(25,25)
+        self.mp = mymap.mymap(10,10)
         
         p0 = civilization.civilization(-1)
         p0.name = "Barbarians"

@@ -26,14 +26,14 @@ class rootPanel(tk.Tk):
         self.columnconfigure(1, weight= 1, minsize=100)
 
         #root>>mainPanel
-        self.mapPanel = tk.Frame(self)
-        self.mapPanel.columnconfigure(0,weight= 1)
-        self.mapPanel.rowconfigure(0,weight= 1)
-        self.mapPanel.config(bg="RED", relief=tk.SUNKEN)
-        self.mapPanel.grid(row=0,column=0,sticky='nsew')
+        self.mainPanel = tk.Frame(self)
+        self.mainPanel.columnconfigure(0,weight= 1)
+        self.mainPanel.rowconfigure(0,weight= 1)
+        self.mainPanel.config(bg="RED", relief=tk.SUNKEN)
+        self.mainPanel.grid(row=0,column=0,sticky='nsew')
 
         #root>>mainPanel>>mapPanel
-        self.mapPanel = mapPanel(self.mapPanel)
+        self.mapPanel = mapPanel(self.mainPanel,self.sendCmd)
         self.mapPanel.grid(row=0,column=0,sticky='nsew')
         
         #root>>rightPanel
@@ -67,17 +67,21 @@ class rootPanel(tk.Tk):
         # print("Key {} pressed".format(event.char))
         if event.char.lower() == '\r': #key enter
             print("enter pressed!")
-            self.send_cmd()
+            self._sendConsoleCmd()
         
     def press_button(self):
         print("button pressed!")
-        self.send_cmd()
+        self._sendConsoleCmd()
 
-    def send_cmd(self):
+    def _sendConsoleCmd(self):
         message = self.consoleInputField.get()
         if message != "":
             self.consoleInputField.delete(0,tk.END)
-            self.client.sendCmd(message)
+            self.sendCmd(message)
+
+    def sendCmd(self, cmd:str):
+        self.client.sendCmd(cmd)
+
 
     def executeInfo(self,info:str):
         if info[0:3].lower() == "ch ": #chat
@@ -86,6 +90,8 @@ class rootPanel(tk.Tk):
             self._onBind(info.split(' ')[1])
         elif info == "returnunbindok":
             self._onUnbind()
+        elif info[0:14] == "returnmapsize ":
+            self.mapPanel.executeInfo(info)
 
     def _onBind(self,playerID:int):
         self.playerId = playerID

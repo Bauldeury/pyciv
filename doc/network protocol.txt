@@ -17,7 +17,7 @@ unbind: unbind the playerId from the thread
 (else): if binded, goes to game. If non binded, loops back an error
 
 GAME LEVEL COMMANDS
-getmapsize: answer 'mapsize X Y'
+getmapsize: answer 'returnmapsize X Y'
 (else): will send to playerHELPER
 
 PLAYER HELPER LEVEL COMMANDS
