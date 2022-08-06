@@ -100,7 +100,10 @@ class mapPanel(tk.Frame):
         image.paste(im=tileImage,box=(coordXY[0]*mapPanel.TILE_SIZE*self.zoom,coordXY[1]*mapPanel.TILE_SIZE*self.zoom),mask=tileImage)
 
     def _onClick(self,event):
-        print ("clicked at {},{}".format(int(event.x/(mapPanel.TILE_SIZE*self.zoom)), int(event.y/(mapPanel.TILE_SIZE*self.zoom))))
+        coords = (self.canvas.canvasx(event.x)+self.tkpic.width()/2,self.canvas.canvasy(event.y)+self.tkpic.height()/2)
+        # print ("clicked at {},{}".format(int(event.x/(mapPanel.TILE_SIZE*self.zoom)), int(event.y/(mapPanel.TILE_SIZE*self.zoom))))
+        coords = tuple(int(i/(mapPanel.TILE_SIZE*self.zoom)) for i in coords)
+        print (coords)
 
         
     def onBind(self,playerID:int):
