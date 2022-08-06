@@ -10,8 +10,10 @@ SERVER LEVEL COMMANDS
 ch text: will broadcast down "ch text" to the all clients
 bindnew: bind the thread to the first available playerId
 bind x: try to bind the thread to the playerId x, where x in [0;255]
+    Both this commands will return "returnbindok x" where x is the player id, or a error message
 getbind: return "returnbind x", where x is the threadID or "None"
 unbind: unbind the playerId from the thread
+    Returns "returnunbindok"
 (else): if binded, goes to game. If non binded, loops back an error
 
 GAME LEVEL COMMANDS

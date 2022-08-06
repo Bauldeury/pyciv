@@ -1,6 +1,5 @@
 import tkinter as tk
 
-import client
 from .mapPanel import mapPanel
 from .consolePanel import consolePanel
 
@@ -10,6 +9,7 @@ class rootPanel(tk.Tk):
         
         self.title("Client V2")
         self.client = client
+        self.playerId = None
         
         self._initWidgets()
         
@@ -26,15 +26,15 @@ class rootPanel(tk.Tk):
         self.columnconfigure(1, weight= 1, minsize=100)
 
         #root>>mainPanel
-        self.mainPanel = tk.Frame(self)
-        self.mainPanel.columnconfigure(0,weight= 1)
-        self.mainPanel.rowconfigure(0,weight= 1)
-        self.mainPanel.config(bg="RED", relief=tk.SUNKEN)
-        self.mainPanel.grid(row=0,column=0,sticky='nsew')
+        self.mapPanel = tk.Frame(self)
+        self.mapPanel.columnconfigure(0,weight= 1)
+        self.mapPanel.rowconfigure(0,weight= 1)
+        self.mapPanel.config(bg="RED", relief=tk.SUNKEN)
+        self.mapPanel.grid(row=0,column=0,sticky='nsew')
 
         #root>>mainPanel>>mapPanel
-        self.mainPanel = mapPanel(self.mainPanel)
-        self.mainPanel.grid(row=0,column=0,sticky='nsew')
+        self.mapPanel = mapPanel(self.mapPanel)
+        self.mapPanel.grid(row=0,column=0,sticky='nsew')
         
         #root>>rightPanel
         self.rightPanel = tk.Frame(self)
@@ -79,7 +79,18 @@ class rootPanel(tk.Tk):
             self.consoleInputField.delete(0,tk.END)
             self.client.sendCmd(message)
 
+    def executeInfo(self,info:str):
+        if info[0:3].lower() == "ch ": #chat
+            self.consolePanel.print(info[3:])
+        elif info[0:13] == "returnbindok ":
+            self._onBind(info.split(' ')[1])
+        elif info == "returnunbindok":
+            self._onUnbind()
 
-            
-    def printConsole(self,message: str):
-        self.consolePanel.print(message)
+    def _onBind(self,playerID:int):
+        self.playerId = playerID
+        self.mapPanel.onBind(playerID)
+
+    def _onUnbind(self):
+        self.playerId = None
+        self.mapPanel.onUnbind()

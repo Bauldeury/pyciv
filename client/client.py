@@ -18,6 +18,7 @@ class clientApp():
         self.ssocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.ssocket.connect((self.hote, self.port))
         print ("[+] Connection on {}:{}.".format(self.hote,self.port))
+
                     
     def stop(self):
         self.quitflag = True
@@ -53,8 +54,8 @@ class clientApp():
         print('SERVER >> {}'.format(encoded_info))
         info = encoded_info.decode()[:-1]
 
-        if info[0:3].lower() == "ch ": #chat
-            self.pMain.printConsole(info[3:])
+        self.pMain.executeInfo(info)
+
         
 
     def sendCmd(self,cmd):

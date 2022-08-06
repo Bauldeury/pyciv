@@ -1,7 +1,5 @@
 import tkinter as tk
-from turtle import onclick
-from PIL import Image,ImageTk
-import PIL
+from PIL import Image,ImageTk, ImageDraw, ImageFont
 
 from common import tile
 from common import mymap
@@ -17,6 +15,7 @@ class mapPanel(tk.Frame):
         
         #initial zoom
         self.zoom:int = 2
+        self.playerID = None
 
         self.mymap = mymap.mymap(25,25)
         self.mymap.tiles[(1,1)].addFeature("ROAD")
@@ -42,17 +41,8 @@ class mapPanel(tk.Frame):
         # Set canvas view to the scrollbars
         self.yscroll.config(command=self.canvas.yview)
         self.xscroll.config(command=self.canvas.xview)
-        # Assign the region to be scrolled 
-        self.canvas.config(scrollregion=self.canvas.bbox('all'))
-        self.canvas.bind_class(self.canvas, "<MouseWheel>", self.mouse_scroll)
-        # initial scroll
-        self.canvas.xview_moveto(0)
-        self.canvas.yview_moveto(0)
 
-
-        #init interaction
-        self.canvas.bind("<Button-1>",self._onClick)
-
+        self._refreshScrollers()
 
 
     def mouse_scroll(self, evt):
@@ -66,19 +56,23 @@ class mapPanel(tk.Frame):
 
 
     def Draw(self):
-        self.pic = Image.new(mode="RGB",size=(mapPanel.TILE_SIZE*self.mymap.sizeX*self.zoom,mapPanel.TILE_SIZE*self.mymap.sizeY*self.zoom))
+        if self.playerID != None:
+            self.pic = Image.new(mode="RGB",size=(mapPanel.TILE_SIZE*self.mymap.sizeX*self.zoom,mapPanel.TILE_SIZE*self.mymap.sizeY*self.zoom))
 
+            for (x,y) in self.mymap.tiles:
+                self._SetTile(self.pic,(x,y),self.mymap.tiles[(x,y)])
 
-        for (x,y) in self.mymap.tiles:
-            self._SetTile(self.pic,(x,y),self.mymap.tiles[(x,y)])
+        else:
+            self.pic = Image.new(mode='RGB',size=(256,128),color=(0,0,0))
+            drawer = ImageDraw.Draw(self.pic)
+            myFont = ImageFont.truetype('client/assets/fonts/TitilliumWeb-Regular.ttf', 24)
+            drawer.text((2,2),"Unbound",font = myFont, fill=(255,0,0))
+
 
         self.tkpic= ImageTk.PhotoImage(self.pic)
         # self.canvas.create_image(0,0,image = self.tkpic)
         self.canvas.itemconfig(self.tkpicid,image = self.tkpic)
 
-
-
-    
 
     def _SetTile(self, image:Image.Image, coordXY,tile:tile.tile):
         '''image: image to draw on\n
@@ -108,6 +102,29 @@ class mapPanel(tk.Frame):
     def _onClick(self,event):
         print ("clicked at {},{}".format(int(event.x/(mapPanel.TILE_SIZE*self.zoom)), int(event.y/(mapPanel.TILE_SIZE*self.zoom))))
 
+        
+    def onBind(self,playerID:int):
+        self.playerID = playerID
+        self.Draw()
+        self._refreshScrollers()
+
+        #init interaction
+        self.canvas.bind("<Button-1>",self._onClick)
+
+    def onUnbind(self):
+        self.playerID = None
+        self.Draw()
+        self._refreshScrollers()
+
+        #unplug interaction
+        self.canvas.unbind("<Button-1>")#removes all methods on button1
+
+    def _refreshScrollers(self):
+        # Assign the region to be scrolled 
+        self.canvas.config(scrollregion=self.canvas.bbox('all'))
+        #initial scroll
+        self.canvas.xview_moveto(0)
+        self.canvas.yview_moveto(0)
 
 
 class MapSpriteHelper:

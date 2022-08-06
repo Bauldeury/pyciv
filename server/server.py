@@ -73,19 +73,19 @@ class server:
         if self._playerIDtoThread(playerId) != None:
             thread.executeInfo(("error: playerId {} already bound".format(playerId)))
         elif thread.playerID != None:
-            thread.executeInfo(("error: connection already bound".format(playerId)))
+            thread.executeInfo(("error: thread already bound".format(playerId)))
         else:
             self._sendCmd(playerId,"createplayer")
             thread.playerID = playerId
             thread.playerName = "player#{}".format(playerId)
-            thread.executeInfo(("playerId {} successfully granted".format(playerId)))
+            thread.executeInfo("returnbindok {}".format(playerId))
 
     def unbindConnectionToPlayer(self, thread: connectionThread):
         playerId = thread.playerID
         self._sendCmd(playerId,"deleteplayer")
         thread.playerID = None
         thread.playerName = "UT"
-        thread.executeInfo(("playerId {} successfully revoked".format(playerId)))
+        thread.executeInfo("returnunbindok")
 
 
     def executeCmd(self,sender: connectionThread,cmd:str):
