@@ -8,15 +8,11 @@ print()
 from . import player  
 
 from . import civilization  
-from . import tech
-from . import mymap
-
+from . import Tilemap
 from . import city
-from . import building
+from . import Terrain
 
-from . import unit
-
-class game:
+class Game:
 
     #vars
 
@@ -25,7 +21,7 @@ class game:
         civilization.helper.registerEndTurnListener(self.endTurn)
         player.helper.sendInfoMethod = self.executeInfo
 
-        self.turn = 0
+        self.turn:int = 0
         self._loadScenario1()
         self.sendInfoMethod = None
 
@@ -69,7 +65,7 @@ class game:
         '''from SERVER to GAME'''
 
         if cmd == "getmapsize":
-            self._sendInfo({sender},"returnmapsize {} {}".format(self.mp.sizeX,self.mp.sizeY))
+            self._sendInfo({sender},"returnmapsize {} {}".format(self.tilemap.sizeX,self.tilemap.sizeY))
         else:
             self._sendCmd(sender,cmd)
 
@@ -97,7 +93,10 @@ class game:
 
     def _loadScenario1(self):
         self.currentYear = -8000
-        self.mp = mymap.mymap(10,10)
+        self.tilemap = Tilemap.Tilemap(10,10)
+        for i in range(5):
+            self.tilemap.tiles[(2,i)].terrain = Terrain.terrains["ARCTIC"]
+            self.tilemap.tiles[(i,2)].addFeature("ROAD")
         
         p0 = civilization.civilization(-1)
         p0.name = "Barbarians"

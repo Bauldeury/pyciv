@@ -92,6 +92,8 @@ class rootPanel(tk.Tk):
             self._onUnbind()
         elif info[0:14] == "returnmapsize ":
             self.mapPanel.executeInfo(info)
+        elif info[0:13] == "returnupdate ":
+            self.mapPanel.executeInfo(info)
 
     def _onBind(self,playerID:int):
         self.playerId = playerID

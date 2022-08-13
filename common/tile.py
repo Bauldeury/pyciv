@@ -1,13 +1,14 @@
 import math
 
 from . import common
-from . import terrain
-from . import feature
+from . import Terrain
+from . import Feature
 
-class tile:
+class Tile:
     def __init__(self):
-        self.terrain:terrain.terrain = terrain.terrains["GRASSLAND"]
+        self.terrain:Terrain.Terrain = Terrain.terrains["GRASSLAND"]
         self.features = None
+        self.updateID = 0
         
     def __repr__(self):
         return "C_TILE:[{}][{}]".format(self.terrain,self.features)
@@ -22,15 +23,15 @@ class tile:
         return common.getSpecialValueProduct(self.features,special)
         
         
-    def addFeature(self,featureKey1):
+    def addFeature(self,featureKey1:int):
         bigKey = (featureKey1,self.terrain.key)
         semiKey = (featureKey1,None)
-        newFeature:feature.feature = None
+        newFeature:Feature.Feature = None
         
-        if bigKey in feature.features:
-            newFeature = feature.features[bigKey]   
-        elif semiKey in feature.features:
-            newFeature = feature.features[semiKey]
+        if bigKey in Feature.features:
+            newFeature = Feature.features[bigKey]   
+        elif semiKey in Feature.features:
+            newFeature = Feature.features[semiKey]
         
         if newFeature != None:
             if self.features == None:

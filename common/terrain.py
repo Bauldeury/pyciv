@@ -2,11 +2,11 @@ import csv
 
 from . import common
 
-terrains = {}
-class terrain:
+terrains:"dict[str,Terrain]" = {}
+class Terrain:
     def __init__(self, key):
-        self.key = key
-        self.byteKey = int.to_bytes(len(terrains),length=1,byteorder='big')
+        self.key:str = key
+        self.intKey:int = len(terrains)
         self.name = "TerrainName"
         self.description = "TerrainDescription"
         self.foodYield = 0
@@ -27,7 +27,7 @@ def _loadTerrains():
         for row in reader:
             if row[0] != "key":
                 key = row[0]
-                t = terrain(key)
+                t = Terrain(key)
                 
                 t.name = row[1]
                 t.description = row[2]
@@ -39,10 +39,10 @@ def _loadTerrains():
                 t.availableFeatures = row[8].split(',')
                 t.ttype = int(row[9])
                 
-class helper:
-    def byteToTerrain(byteKey):
+class Helper:
+    def intToTerrain(intKey:int) -> "Terrain|None":
         for item in terrains.values():
-            if item.byteKey == byteKey:
+            if item.intKey == intKey:
                 return item
         return None
         

@@ -1,8 +1,6 @@
 import csv
-from pydoc import doc
 
 def test_terrains_integrity():
-    assert 1 == 1
     with open('./common/terrains.csv', newline ="") as csvfile:
         reader = csv.reader(csvfile, delimiter=';')
 

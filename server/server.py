@@ -1,7 +1,7 @@
 import socket
 from sqlite3 import connect
 
-from common.game import game
+from common.Game import Game
 from .connectionThread import *
 
 class server:
@@ -15,7 +15,7 @@ class server:
         port = 6951
         self.sock.bind((host,port))
 
-        self.game = game()
+        self.game = Game()
         self.game.sendInfoMethod = self.executeInfo
         
     def start(self):

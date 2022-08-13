@@ -1,3 +1,6 @@
+from common.Tilemap import Tilemap
+
+
 class player:
     _players = {}
 
@@ -20,6 +23,17 @@ class player:
 
         if cmd.lower() == "ping player": #test
             self._sendInfo("player pong")
+        elif cmd[0:10].lower() == "getupdate ":
+            info:str = "returnupdate"
+
+            tm:Tilemap = Tilemap.tilemaps[0]
+            for coord in tm.tiles:
+                info += ' tx{}y{}t{}'.format(coord[0],coord[1],tm.tiles[coord].terrain.intKey)
+                if tm.tiles[coord].features != None:
+                    for fi in tm.tiles[coord].features:
+                        info += 'f{}'.format(tm.tiles[coord].features[fi].intKey)
+
+            self._sendInfo(info)
 
         else:
             self._sendInfo("error: cmd unknown at the player level")
@@ -31,6 +45,7 @@ class player:
 
 class helper:
     sendInfoMethod = None 
+    mp:Tilemap = None
 
     def executeCmd(playerId:int,cmd:str):
         '''from GAME to PLAYERHELPER'''

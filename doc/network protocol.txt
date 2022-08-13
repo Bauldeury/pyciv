@@ -27,6 +27,12 @@ deleteplayer: Delete a player for a binded thread. Only callable from the server
 
 PLAYER LEVEL COMMANDS
 ping player: will answer "player pong"
-gettile x1 y1 ... xn yn: will answer "returntile TILE-INFO1 ... TILE-INFOn"
-    TILE-INFO: terrainID(or 255 for fog of war), featureID..., featureID, 'u'unitID, 'c'cityID
+getupdate x: where x is an updateID. Will return all items which updateID is greater
+    will return "returnupdate %:currentUpdateID ELEMENTS"
+    ELEMENTS: space separated elements. Can be:
+        (replace % by characters, end string with chr !)
+        tile: t[x%][y%][u:unexplored][o:fogofwar][t%:terrainID][f%,...,%!:featureID]
+        unit: u[x%][y%][i%:id][o%:ownerid][t%:unittypeID]
+        city: c[x%][y%][i%:id][o%:ownerid][n%!:name][p%:pop]
+        event: (to be described)
 (else): loops back an error

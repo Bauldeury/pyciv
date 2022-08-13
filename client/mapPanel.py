@@ -1,8 +1,11 @@
 import tkinter as tk
 from PIL import Image,ImageTk, ImageDraw, ImageFont
 
-from common import tile
-from common import mymap
+from common import Tile
+from common import Tilemap
+from common import Terrain
+from common import Feature
+from common import common
 
 class mapPanel(tk.Frame):
     TILEMAP_PATH = r"client/assets/tiles.png"
@@ -17,7 +20,7 @@ class mapPanel(tk.Frame):
         self.playerID = None
         self.sendCmd_func = sendCmd_func
 
-        self.mymap = None
+        self.tilemap = None
 
         self.xscroll = tk.Scrollbar(self,orient='horizontal')
         self.yscroll = tk.Scrollbar(self,orient='vertical')
@@ -60,16 +63,16 @@ class mapPanel(tk.Frame):
             drawer = ImageDraw.Draw(self.pic)
             myFont = ImageFont.truetype('client/assets/fonts/TitilliumWeb-Regular.ttf', 24)
             drawer.text((2,2),"Unbound",font = myFont, fill=(255,255,255))
-        elif self.mymap == None:
+        elif self.tilemap == None:
             self.pic = Image.new(mode='RGB',size=(256,128),color=(0,0,0))
             drawer = ImageDraw.Draw(self.pic)
             myFont = ImageFont.truetype('client/assets/fonts/TitilliumWeb-Regular.ttf', 24)
-            drawer.text((2,2),"ERROR:NoMap",font = myFont, fill=(255,0,0))
+            drawer.text((2,2),"Map loading...",font = myFont, fill=(255,255,0))
         else:
-            self.pic = Image.new(mode="RGB",size=(mapPanel.TILE_SIZE*self.mymap.sizeX*self.zoom,mapPanel.TILE_SIZE*self.mymap.sizeY*self.zoom))
+            self.pic = Image.new(mode="RGB",size=(mapPanel.TILE_SIZE*self.tilemap.sizeX*self.zoom,mapPanel.TILE_SIZE*self.tilemap.sizeY*self.zoom))
 
-            for (x,y) in self.mymap.tiles:
-                self._SetTile(self.pic,(x,y),self.mymap.tiles[(x,y)])
+            for (x,y) in self.tilemap.tiles:
+                self._SetTile(self.pic,(x,y),self.tilemap.tiles[(x,y)])
 
 
 
@@ -78,20 +81,22 @@ class mapPanel(tk.Frame):
         self.canvas.itemconfig(self.tkpicid,image = self.tkpic)
 
 
-    def _SetTile(self, image:Image.Image, coordXY,tile:tile.tile):
-        '''image: image to draw on\n
+    def _SetTile(self, image:Image.Image, coordXY:"tuple[int,int]",tile:Tile.Tile):
+        '''Only called from the draw method
+        
+        image: image to draw on\n
         coordXY: [int, int] worldspace position of the tile\n'''
-        self._SetSprite(image, coordXY, MapSpriteHelper.TerrainSpriteIndex(tile.terrain.byteKey))  
+        self._SetSprite(image, coordXY, MapSpriteHelper.TerrainSpriteIndex(tile.terrain))  
 
         if tile.features != None:
             for i in tile.features:
-                self._SetSprite(image,coordXY,MapSpriteHelper.FeatureSpriteIndex(tile.features[i].byteKey))
+                self._SetSprite(image,coordXY,MapSpriteHelper.FeatureSpriteIndex(tile.features[i]))
 
 
-    def _SetSprite(self, image:Image.Image, coordXY,spriteIndex:int):
+    def _SetSprite(self, image:Image.Image, coordXY:"tuple[int,int]",spriteIndex:"tuple[int,int]"):
         '''image: image to draw on\n
-        coordXY: [int, int] worldspace position of the tile\n
-        spriteIndex: [int, int], left to right, top to bottom'''
+        coordXY: tuple[int, int] worldspace position of the tile\n
+        spriteIndex: tuple[int, int], left to right, top to bottom'''
         
         tileImage = self.spriteSheet.crop((
             mapPanel.TILE_SIZE * spriteIndex[0],
@@ -107,7 +112,7 @@ class mapPanel(tk.Frame):
         coords = (self.canvas.canvasx(event.x)+self.tkpic.width()/2,self.canvas.canvasy(event.y)+self.tkpic.height()/2)
         # print ("clicked at {},{}".format(int(event.x/(mapPanel.TILE_SIZE*self.zoom)), int(event.y/(mapPanel.TILE_SIZE*self.zoom))))
         coords = tuple(int(i/(mapPanel.TILE_SIZE*self.zoom)) for i in coords)
-        print (coords)
+        print ("Clicked: {}".format(coords))
 
         
     def onBind(self,playerID:int):
@@ -139,19 +144,41 @@ class mapPanel(tk.Frame):
     def executeInfo(self,info:str):
         if info[0:14] == "returnmapsize ":
             _,x,y = info.split(' ')
-            self.mymap = mymap.mymap(int(x),int(y))
+            self.tilemap = Tilemap.Tilemap(int(x),int(y))
+            self.sendCmd("getupdate -1")
+        elif info[0:13] == "returnupdate ":
+            strings = info.split(' ')
+            for string in strings:
+                if string[0] == 't': self._updateTileFromString(string)
+
             self.Draw()
             self._refreshScrollers()
+
 
 
     def sendCmd(self,cmd:str):
         self.sendCmd_func(cmd)
 
+    def _updateTileFromString(self,string:str):
+        """reads and works out strings like this: t[x%][y%][u:unexplored][o:fogofwar][t%:terrainID][f%:featureID]"""
+        args = common.decomposeStrToArgs(string[1:],boolArgs=['u','o'],intArgs=['x','y','t'],strArgs=['f'])
+
+        coord = (int(args['x']),int(args['y']))
+        tile = Tile.Tile()
+        tile.terrain = Terrain.Helper.intToTerrain(int(args["t"]))
+        if 'f' in args:
+            for f in args['f'].split(','):
+                tile.addFeature(Feature.Helper.intToFeature(int(f)).key[0])
+
+        self.tilemap.tiles[coord] = tile
+
 
 class MapSpriteHelper:
-    clignot = 0
-    def TerrainSpriteIndex(byteID:int) -> int:
-        MapSpriteHelper.clignot += 1
-        return (MapSpriteHelper.clignot % 3,0)
-    def FeatureSpriteIndex(byteID:int) -> int:
-        return (0,2)
+    def TerrainSpriteIndex(terrain:Terrain.Terrain) -> "tuple[int,int]":
+        return (terrain.intKey % 8,terrain.intKey // 8)
+    def FeatureSpriteIndex(feature:Feature.Feature) -> "tuple[int,int]":
+        if feature.key[0] == "ROAD": return (0,4)
+        elif feature.key[0] == "RAILROAD": return (0,5)
+        else : return (5,7)
+    def FogSpriteIndex(): return (6,7)
+    def UnexploredSpriteIndex(): return (7,7)

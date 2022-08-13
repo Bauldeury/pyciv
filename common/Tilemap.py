@@ -1,24 +1,39 @@
 import math
 
-from . import tile
+from . import Tile
     
 
-class mymap:
-    def __init__(self,sizeX,sizeY):
+class Tilemap:
+    tilemaps = {}
+
+    def __init__(self,sizeX:int,sizeY:int,tilemapId:int=0):
+        if tilemapId in Tilemap.tilemaps:
+            raise Exception("TilemapID already existing")
+
+        self.tilemapId = tilemapId
+        Tilemap.tilemaps[tilemapId] = self
+
         self.sizeX = sizeX
         self.sizeY = sizeY
-        self.tiles:dict[str,tile.tile]= {}
+        self.tiles:dict["tuple[int,int]",Tile.Tile]= {}
         for x in range (sizeX):
             for y in range (sizeY):
-                self.tiles[(x,y)] = tile.tile()
+                self.tiles[(x,y)] = Tile.Tile()
+
+                
+    def __del__(self):
+        if self.tilemapId in Tilemap.tilemaps:
+            del Tilemap.tilemaps[self.tilemapId]
                
     def getTile(self,pos):
+        '''Pos: tuple[int,int]'''
         if self.isPosValid(pos):
             return self.tiles[pos]
         else:
             return None
             
     def isPosValid(self,pos):
+        '''Pos: tuple[int,int]'''
         if pos[0] >= self.sizeX or pos[1] >= self.sizeY or pos[0] < 0 or pos[1] <0:
             return False
         return True

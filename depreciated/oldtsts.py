@@ -1,4 +1,4 @@
-import common.mymap as mymap
+import common.Tilemap as Tilemap
 import common.city as city
 import common.building as building
 import common.unit as unit
@@ -51,7 +51,7 @@ def testTileComputation(verbose):
     out_messages = []
 
     #basic data
-    tr = mymap._terrain("TR_TEST")
+    tr = Tilemap._terrain("TR_TEST")
     tr.foodYield = 3
     tr.productionYield = 2
     tr.commerceYield = 1
@@ -63,7 +63,7 @@ def testTileComputation(verbose):
         indentedPrint("FOOD:{}, PROD:{}, COMM:{}, MOVE:{}, DEF:{}".format(tr.foodYield,tr.productionYield,tr.commerceYield,tr.travelCost, tr.defensiveBonus) )
         indentedPrint()
     
-    ft = mymap._feature(("FT_TEST","TR_TEST"))
+    ft = Tilemap._feature(("FT_TEST","TR_TEST"))
     ft.specials = ["COMMERCE_YIELD","4","DEFENSIVE_BONUS","100","SET_MOVEMENT_COST","0.5","ALL_MULTIPLIER","1.5"]
     
     if verbose:
@@ -71,8 +71,8 @@ def testTileComputation(verbose):
         indentedPrint(ft.specials)
         indentedPrint()
     
-    t = mymap.tile()
-    t.terrain = mymap._terrains["TR_TEST"]
+    t = Tilemap.Tile()
+    t.terrain = Tilemap._terrains["TR_TEST"]
     
     #test 1 : bare terrain
     testString = "FOOD:{}, PROD:{}, COMM:{}, MOVE:{}, DEF:{}".format(t.foodYield,t.productionYield,t.commerceYield,t.travelCost, t.defensiveBonus)
