@@ -1,3 +1,4 @@
+import common.Common as Common
 from common.Tilemap import Tilemap
 
 
@@ -24,14 +25,22 @@ class Player:
         if cmd.lower() == "ping player": #test
             self._sendInfo("player pong")
         elif cmd[0:10].lower() == "getupdate ":
+            try:
+                updateId = int(cmd.split(" ")[1])
+            except:
+                self._sendInfo("error: {} is not an int".format(cmd.split(" ")[1]))
+                return
+
             info:str = "returnupdate"
+
+            info += " {}".format(Common.updateId)
 
             tm:Tilemap = Tilemap.tilemaps[0]
             for coord in tm.tiles:
-                info += ' tx{}y{}t{}'.format(coord[0],coord[1],tm.tiles[coord].terrain.intKey)
-                if tm.tiles[coord].features != None:
-                    for fi in tm.tiles[coord].features:
-                        info += 'f{}'.format(tm.tiles[coord].features[fi].intKey)
+                if tm.tiles[coord].updateID > updateId:
+                    info += ' tx{}y{}t{}'.format(coord[0],coord[1],tm.tiles[coord].terrain.intKey)
+                    if tm.tiles[coord].features != None:
+                        info += 'f{}'.format(','.join(str(tm.tiles[coord].features[x].intKey) for x in tm.tiles[coord].features))
 
             self._sendInfo(info)
 

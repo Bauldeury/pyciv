@@ -148,6 +148,7 @@ class MapPanel(tk.Frame):
             self.sendCmd("getupdate -1")
         elif info[0:13] == "returnupdate ":
             strings = info.split(' ')
+            Common.updateId = int(strings[1])
             for string in strings:
                 if string[0] == 't': self._updateTileFromString(string)
 
@@ -165,6 +166,7 @@ class MapPanel(tk.Frame):
 
         coord = (int(args['x']),int(args['y']))
         tile = Tile.Tile()
+        tile.updateID = Common.updateId
         tile.terrain = Terrain.Helper.intToTerrain(int(args["t"]))
         if 'f' in args:
             for f in args['f'].split(','):
