@@ -1,14 +1,13 @@
-from . import building
-from . import civilization
+from . import Building
 
 _cities = {}
-class city:
+class City:
     _citiesNextKey = 0
     
     #ADMIN    
     def __init__(self, pos = (0,0), name = "Noname", owner = 0):
-        self.key = city._citiesNextKey
-        city._citiesNextKey += 1
+        self.key = City._citiesNextKey
+        City._citiesNextKey += 1
         _cities[self.key] = self
         
         self.name = name
@@ -18,7 +17,7 @@ class city:
         self.population = 1
         self.foodPile = 0 
         
-        self.buildings = building.buildingSet(city = self)
+        self.buildings = Building.BuildingSet(city = self)
         
         self._properties = dict()
         self._computeFlag = True
@@ -96,7 +95,7 @@ class city:
             
         self._computeProperties()
 
-class helper():
+class Helper():
     def endTurn():
         for i_city in _cities:
             _cities[i_city].endTurn()

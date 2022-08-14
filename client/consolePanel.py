@@ -1,6 +1,6 @@
 import tkinter as tk
 
-class consolePanel(tk.Message):
+class ConsolePanel(tk.Message):
     def __init__(self,parent):
         tk.Message.__init__(self,parent,text="", relief=tk.SUNKEN, bg = "WHITE",anchor = tk.NW)
         self.lines = []

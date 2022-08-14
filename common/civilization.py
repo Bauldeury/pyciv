@@ -1,7 +1,7 @@
 _civilizations = {}
 _endTurnListener = set()
 
-class civilization:
+class Civilization:
     
     def __init__(self,key = "NEW"):
         '''Civilization constructor
@@ -40,7 +40,7 @@ class civilization:
         self.isTurnFinished = True
         
         if (forcedByMain == False):
-            if helper._areAllcivilizationTurnFinished():
+            if Helper._areAllcivilizationTurnFinished():
                 for method in _endTurnListener:
                     method()
         
@@ -48,7 +48,7 @@ class civilization:
         self.isTurnFinished = False
 
 
-class helper():
+class Helper():
     def endTurn():
         for i_civilization in _civilizations:
             _civilizations[i_civilization].endTurn(forcedByMain = True)

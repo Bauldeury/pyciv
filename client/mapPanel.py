@@ -5,9 +5,9 @@ from common import Tile
 from common import Tilemap
 from common import Terrain
 from common import Feature
-from common import common
+from common import Common
 
-class mapPanel(tk.Frame):
+class MapPanel(tk.Frame):
     TILEMAP_PATH = r"client/assets/tiles.png"
     TILE_SIZE:int = 32
     '''unit is pixels'''
@@ -25,7 +25,7 @@ class mapPanel(tk.Frame):
         self.xscroll = tk.Scrollbar(self,orient='horizontal')
         self.yscroll = tk.Scrollbar(self,orient='vertical')
 
-        self.spriteSheet = Image.open(mapPanel.TILEMAP_PATH)
+        self.spriteSheet = Image.open(MapPanel.TILEMAP_PATH)
         self.canvas = tk.Canvas(self)
         self.tkpicid = self.canvas.create_image(0,0)
         self.Draw()
@@ -69,7 +69,7 @@ class mapPanel(tk.Frame):
             myFont = ImageFont.truetype('client/assets/fonts/TitilliumWeb-Regular.ttf', 24)
             drawer.text((2,2),"Map loading...",font = myFont, fill=(255,255,0))
         else:
-            self.pic = Image.new(mode="RGB",size=(mapPanel.TILE_SIZE*self.tilemap.sizeX*self.zoom,mapPanel.TILE_SIZE*self.tilemap.sizeY*self.zoom))
+            self.pic = Image.new(mode="RGB",size=(MapPanel.TILE_SIZE*self.tilemap.sizeX*self.zoom,MapPanel.TILE_SIZE*self.tilemap.sizeY*self.zoom))
 
             for (x,y) in self.tilemap.tiles:
                 self._SetTile(self.pic,(x,y),self.tilemap.tiles[(x,y)])
@@ -99,19 +99,19 @@ class mapPanel(tk.Frame):
         spriteIndex: tuple[int, int], left to right, top to bottom'''
         
         tileImage = self.spriteSheet.crop((
-            mapPanel.TILE_SIZE * spriteIndex[0],
-            mapPanel.TILE_SIZE * spriteIndex[1],
-            mapPanel.TILE_SIZE * (spriteIndex[0]+1),
-            mapPanel.TILE_SIZE * (spriteIndex[1]+1)
+            MapPanel.TILE_SIZE * spriteIndex[0],
+            MapPanel.TILE_SIZE * spriteIndex[1],
+            MapPanel.TILE_SIZE * (spriteIndex[0]+1),
+            MapPanel.TILE_SIZE * (spriteIndex[1]+1)
             ))
         if self.zoom != 1:
-            tileImage = tileImage.resize((mapPanel.TILE_SIZE*self.zoom,mapPanel.TILE_SIZE*self.zoom),resample=Image.NEAREST)
-        image.paste(im=tileImage,box=(coordXY[0]*mapPanel.TILE_SIZE*self.zoom,coordXY[1]*mapPanel.TILE_SIZE*self.zoom),mask=tileImage)
+            tileImage = tileImage.resize((MapPanel.TILE_SIZE*self.zoom,MapPanel.TILE_SIZE*self.zoom),resample=Image.NEAREST)
+        image.paste(im=tileImage,box=(coordXY[0]*MapPanel.TILE_SIZE*self.zoom,coordXY[1]*MapPanel.TILE_SIZE*self.zoom),mask=tileImage)
 
     def _onClick(self,event):
         coords = (self.canvas.canvasx(event.x)+self.tkpic.width()/2,self.canvas.canvasy(event.y)+self.tkpic.height()/2)
         # print ("clicked at {},{}".format(int(event.x/(mapPanel.TILE_SIZE*self.zoom)), int(event.y/(mapPanel.TILE_SIZE*self.zoom))))
-        coords = tuple(int(i/(mapPanel.TILE_SIZE*self.zoom)) for i in coords)
+        coords = tuple(int(i/(MapPanel.TILE_SIZE*self.zoom)) for i in coords)
         print ("Clicked: {}".format(coords))
 
         
@@ -161,7 +161,7 @@ class mapPanel(tk.Frame):
 
     def _updateTileFromString(self,string:str):
         """reads and works out strings like this: t[x%][y%][u:unexplored][o:fogofwar][t%:terrainID][f%:featureID]"""
-        args = common.decomposeStrToArgs(string[1:],boolArgs=['u','o'],intArgs=['x','y','t'],strArgs=['f'])
+        args = Common.decomposeStrToArgs(string[1:],boolArgs=['u','o'],intArgs=['x','y','t'],strArgs=['f'])
 
         coord = (int(args['x']),int(args['y']))
         tile = Tile.Tile()

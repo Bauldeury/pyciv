@@ -1,11 +1,11 @@
 import socket
 import select
 
-from .rootPanel import rootPanel
+from .RootPanel import RootPanel
 
-class clientApp():
+class Client():
     def __init__(self):
-        self.pMain = rootPanel(self)
+        self.pMain = RootPanel(self)
         self.pMain.protocol("WM_DELETE_WINDOW", self.stop)
         
         self._connect()
@@ -66,7 +66,7 @@ class clientApp():
 
    
 def main():
-    app = clientApp()
+    app = Client()
     app.start()
 
         

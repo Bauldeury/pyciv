@@ -1,6 +1,6 @@
 import csv
 
-from . import common
+from . import Common
 
 features:"dict[str,Feature]" = {}
 class Feature:
@@ -20,7 +20,7 @@ class Feature:
         return "C_FEATURE:{}".format(self.key)
 
 def _loadFeatures():
-    with open(common.getCommonPath()+"features.csv", newline ="") as csvfile:
+    with open(Common.getCommonPath()+"features.csv", newline ="") as csvfile:
         reader = csv.reader(csvfile, delimiter=';')
         for row in reader:
             if row[0] != "key":

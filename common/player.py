@@ -1,19 +1,19 @@
 from common.Tilemap import Tilemap
 
 
-class player:
+class Player:
     _players = {}
 
     def __init__(self,playerId):
-        if playerId in player._players:
+        if playerId in Player._players:
             raise Exception("PlayerID already existing")
 
         self.playerId = playerId
-        player._players[self.playerId] = self
+        Player._players[self.playerId] = self
 
     def __del__(self):
-        if self.playerId in player._players: #most of the time no, it's called from the player helper and already deleted
-            del player._players[self.playerId]
+        if self.playerId in Player._players: #most of the time no, it's called from the player helper and already deleted
+            del Player._players[self.playerId]
 
     def __repr__(self):
         return "C_player#{}".format(self.playerId)
@@ -40,10 +40,10 @@ class player:
 
     def _sendInfo(self,info):
         '''from PLAYER to PLAYERHELPER'''
-        helper.executeInfo(self,info)
+        Helper.executeInfo(self,info)
 
 
-class helper:
+class Helper:
     sendInfoMethod = None 
     mp:Tilemap = None
 
@@ -51,28 +51,28 @@ class helper:
         '''from GAME to PLAYERHELPER'''
 
         if cmd.lower() == "createplayer":
-            player(playerId)
+            Player(playerId)
         elif cmd.lower() == "deleteplayer":
-            del player._players[playerId]
+            del Player._players[playerId]
         else:
-            helper._sendCmd(playerId,cmd)
+            Helper._sendCmd(playerId,cmd)
 
     def _sendCmd(playerId:int,cmd:str):
         '''from PLAYERHELPER to PLAYER'''
-        player._players[playerId].executeCmd(cmd)
+        Player._players[playerId].executeCmd(cmd)
 
-    def executeInfo(sender:player,info:str):
+    def executeInfo(sender:Player,info:str):
         '''from PLAYER to PLAYERHELPER
         
         target must be either "ALL", "NONE", or a list of playerID'''
-        helper._sendInfo([sender.playerId],info)
+        Helper._sendInfo([sender.playerId],info)
 
     def _sendInfo(target,info:str):
         '''from PLAYERHELPER to GAME
         
         target must be either "ALL", "NONE", or a list of playerID'''
-        if helper.sendInfoMethod != None:
-            helper.sendInfoMethod(target, info)
+        if Helper.sendInfoMethod != None:
+            Helper.sendInfoMethod(target, info)
         else:
             raise Exception("sendInfoMethod not set")
         

@@ -1,9 +1,9 @@
 import tkinter as tk
 
-from .mapPanel import mapPanel
-from .consolePanel import consolePanel
+from .MapPanel import MapPanel
+from .ConsolePanel import ConsolePanel
 
-class rootPanel(tk.Tk):
+class RootPanel(tk.Tk):
     def __init__(self,client):
         tk.Tk.__init__(self)
         
@@ -33,7 +33,7 @@ class rootPanel(tk.Tk):
         self.mainPanel.grid(row=0,column=0,sticky='nsew')
 
         #root>>mainPanel>>mapPanel
-        self.mapPanel = mapPanel(self.mainPanel,self.sendCmd)
+        self.mapPanel = MapPanel(self.mainPanel,self.sendCmd)
         self.mapPanel.grid(row=0,column=0,sticky='nsew')
         
         #root>>rightPanel
@@ -42,7 +42,7 @@ class rootPanel(tk.Tk):
         self.rightPanel.grid(row=0,column=1,sticky='nsew')
     
         #root>>rightPanel>>consolePanel
-        self.consolePanel = consolePanel(self.rightPanel)
+        self.consolePanel = ConsolePanel(self.rightPanel)
         # self.consolePanel.pack()
         self.consolePanel.grid(row=0,column=0,sticky='ew')
 

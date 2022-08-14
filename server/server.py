@@ -2,12 +2,12 @@ import socket
 from sqlite3 import connect
 
 from common.Game import Game
-from .connectionThread import *
+from .ConnectionThread import *
 
-class server:
+class Server:
 
     def __init__(self):
-        self.connectionThreads:set[connectionThread] = set()
+        self.connectionThreads:set[ConnectionThread] = set()
         self.listening = False
         
         self.sock = socket.socket()
@@ -43,11 +43,11 @@ class server:
     def createConnectionThread(self, conn, c_ip, c_port):
         print ("{}:{} opened connection".format(c_ip, c_port))
         #open conn
-        thread = connectionThread(self,conn,c_ip,c_port)
+        thread = ConnectionThread(self,conn,c_ip,c_port)
         self.connectionThreads.add(thread)
         thread.start()
        
-    def removeConnectionThread(self, thread: connectionThread):
+    def removeConnectionThread(self, thread: ConnectionThread):
         if thread.playerID != None:
             self.unbindConnectionToPlayer(thread)
 
@@ -62,14 +62,14 @@ class server:
         return None
 
 
-    def bindConnectionToNewPlayer(self, thread: connectionThread):
+    def bindConnectionToNewPlayer(self, thread: ConnectionThread):
         i = 0
         while self._playerIDtoThread(i) != None:
             i+=1
 
         self.bindConnectionToPlayer(thread, i)
 
-    def bindConnectionToPlayer(self, thread: connectionThread, playerId: int):
+    def bindConnectionToPlayer(self, thread: ConnectionThread, playerId: int):
         if self._playerIDtoThread(playerId) != None:
             thread.executeInfo(("error: playerId {} already bound".format(playerId)))
         elif thread.playerID != None:
@@ -80,7 +80,7 @@ class server:
             thread.playerName = "player#{}".format(playerId)
             thread.executeInfo("returnbindok {}".format(playerId))
 
-    def unbindConnectionToPlayer(self, thread: connectionThread):
+    def unbindConnectionToPlayer(self, thread: ConnectionThread):
         playerId = thread.playerID
         self._sendCmd(playerId,"deleteplayer")
         thread.playerID = None
@@ -88,7 +88,7 @@ class server:
         thread.executeInfo("returnunbindok")
 
 
-    def executeCmd(self,sender: connectionThread,cmd:str):
+    def executeCmd(self,sender: ConnectionThread,cmd:str):
         '''From THREAD to SERVER'''
 
         if cmd[0:3].lower() == "ch ": #chat
@@ -165,7 +165,7 @@ class server:
       
         
 def main():
-    s = server()
+    s = Server()
     s.start()
     
                 

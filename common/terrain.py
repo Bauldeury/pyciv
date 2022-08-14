@@ -1,6 +1,6 @@
 import csv
 
-from . import common
+from . import Common
 
 terrains:"dict[str,Terrain]" = {}
 class Terrain:
@@ -22,7 +22,7 @@ class Terrain:
         return "C_TERRAIN:{}".format(self.key)
 
 def _loadTerrains():
-    with open(common.getCommonPath()+"terrains.csv", newline ="") as csvfile:
+    with open(Common.getCommonPath()+"terrains.csv", newline ="") as csvfile:
         reader = csv.reader(csvfile, delimiter=';')
         for row in reader:
             if row[0] != "key":

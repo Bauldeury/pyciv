@@ -1,8 +1,8 @@
-import common.common
+import common.Common
 
 def test_decomposeStrToArgs():
      #'t[x%][y%][u:unexplored][o:fogofwar][t%:terrainID][f%:featureID]'
-     args = common.common.decomposeStrToArgs('x15y-5ut77f18,75!bpotato!aninja',boolArgs=['u','o'],intArgs=['x','y','t'],strArgs=['b','a','f'])
+     args = common.Common.decomposeStrToArgs('x15y-5ut77f18,75!bpotato!aninja',boolArgs=['u','o'],intArgs=['x','y','t'],strArgs=['b','a','f'])
      print(args)
      
      assert 'u' in args

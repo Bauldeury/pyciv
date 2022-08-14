@@ -1,6 +1,6 @@
 import math
 
-from . import common
+from . import Common
 from . import Terrain
 from . import Feature
 
@@ -14,13 +14,13 @@ class Tile:
         return "C_TILE:[{}][{}]".format(self.terrain,self.features)
         
     def getSpecialExists(self,special):
-        return common.getSpecialExists(self.features,special)
+        return Common.getSpecialExists(self.features,special)
                         
     def getSpecialValueSum(self,special):
-        return common.getSpecialValueSum(self.features,special)
+        return Common.getSpecialValueSum(self.features,special)
 
     def getSpecialValueProduct(self,special):
-        return common.getSpecialValueProduct(self.features,special)
+        return Common.getSpecialValueProduct(self.features,special)
         
         
     def addFeature(self,featureKey1:int):

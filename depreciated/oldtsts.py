@@ -1,8 +1,6 @@
 import common.Tilemap as Tilemap
-import common.city as city
-import common.building as building
-import common.unit as unit
-import common.tech as tech
+import common.Building as Building
+import common.Tech as Tech
 
 import csv
 
@@ -125,10 +123,10 @@ def testBuildings(verbose):
     out_messages = []
     
     #basic data
-    blds = building.buildingSet()
+    blds = Building.BuildingSet()
     #test buildings
-    building1 = building._building("BUILDING1")
-    building2 = building._building("BUILDING2")
+    building1 = Building.BuildingType("BUILDING1")
+    building2 = Building.BuildingType("BUILDING2")
     s1 = 3
     s2 = 5
     building1.specials = ["POP_SUPPORT",s1]
@@ -211,16 +209,16 @@ def testTechs(verbose):
     out_messages = []
     
     #basic data
-    tA = tech.tech("TECH_A")
-    tB = tech.tech("TECH_B")
-    tC = tech.tech("TECH_C")
-    tU = tech.tech("TECH_UNSEARCHEABLE")
+    tA = Tech.Tech("TECH_A")
+    tB = Tech.Tech("TECH_B")
+    tC = Tech.Tech("TECH_C")
+    tU = Tech.Tech("TECH_UNSEARCHEABLE")
     
     tA.requires = tB.requires = None
     tC.requires = [tA.key,tB.key]
     tU.requires = -1
     
-    ts = tech.techSet()
+    ts = Tech.TechSet()
     
     def testSearchability(shouldBeSearchable, techkey, searcheables, out_messages):
         searcheables = ts.getSearcheables()

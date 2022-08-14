@@ -1,13 +1,13 @@
 import csv
 
-from . import common
+from . import Common
 
-_unitTypes = {}
-class _unitType:
+unitTypes:"dict[str,UnitType]" = {}
+class UnitType:
     def __init__(self):
-        self.key = "UNITTYPE_KEY"
-        self.byteKey = int.to_bytes(len(_unitTypes),length=1,byteorder='big')
-        _unitTypes[self.key] = self
+        self.key:str = "UNITTYPE_KEY"
+        self.intKey:int = len(unitTypes)
+        unitTypes[self.key] = self
         
         self.name = "UnittypeName"
         
@@ -23,8 +23,8 @@ class _unitType:
     def __repr__(self):
         return "C_UNITTYPE:{}".format(self.key)
 
-_units = set()
-class unit:
+units = set()
+class Unit:
     def __init__(self, unitType, owner = 0, pos = (0,0)):
         self.unitType = unitType
         self.owner = owner
@@ -34,13 +34,13 @@ class unit:
         self.curLife = self.maxLife
         self.curMove = self.maxMove
         
-        _units.add(self)
+        units.add(self)
     
     def __repr__(self):
         return "C_UNIT:{},owner{},pos{}".format(self.name,self.owner,self.pos)
         
     def destroy(self):
-        _units.remove(self)
+        units.remove(self)
         del self
         
     def endTurn(self):
@@ -69,15 +69,15 @@ class unit:
     def specials(self):
         return self.unitType.specials
 
-class helper:
+class Helper:
     def getUnitsOnPos(pos):
-        return set(x for x in _units if x.pos == pos)
+        return set(x for x in units if x.pos == pos)
         
     def getUnitsOfOwner(ownerKey):
-        return set(x for x in _units if x.owner == ownerKey)
+        return set(x for x in units if x.owner == ownerKey)
         
     def byteToUnitType(byteKey):
-        for item in _unitTypes.values():
-            if item.byteKey == byteKey:
+        for item in unitTypes.values():
+            if item.intKey == byteKey:
                 return item
         return None

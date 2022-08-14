@@ -1,13 +1,13 @@
 import csv
 
-from . import common
+from . import Common
 
-_techs = {}
-class tech:
-    def __init__(self,key):
-        self.key = key
-        self.byteKey = int.to_bytes(len(_techs),length=1,byteorder='big')
-        _techs[self.key] = self
+techs = {}
+class Tech:
+    def __init__(self,key:str):
+        self.key:str = key
+        self.intKey:int = len(techs)
+        techs[self.key] = self
         
         self.name = "TechName"
         self.description = "TechDesc"
@@ -16,12 +16,12 @@ class tech:
         
         
 def _loadTechs():
-    with open(common.getCommonPath()+"techs.csv", newline ="") as csvfile:
+    with open(Common.getCommonPath()+"techs.csv", newline ="") as csvfile:
         reader = csv.reader(csvfile, delimiter=';')
         for row in reader:
             if row[0] != "key":
                 key = row[0]
-                th = tech(key)
+                th = Tech(key)
                 th.name = row[1]
                 th.description = row [2]
                 th.cost = row[3]
@@ -35,19 +35,19 @@ def _loadTechs():
                     th.requires = r_requires.split(',')
     
     
-class techSet:
+class TechSet:
     def __init__(self):
-        self._ths = {}
+        self._ths:"dict[str,Tech]" = {}
         
     def __repr__(self):
         return "C_TECH_SET:{}".format(self._ths.keys())
         
-    def add(self,techKey):
-        self._ths[techKey] = _techs[techKey]
+    def add(self,techKey:str):
+        self._ths[techKey] = techs[techKey]
         
-    def addBulk(self,techKeySet):
+    def addBulk(self,techKeySet:"set[str]"):
         for techKey in techKeySet:
-            self._ths[techKey] = _techs[techKey]
+            self._ths[techKey] = techs[techKey]
         
     def remove(self,techKey):
         self._ths.pop(techKey)
@@ -64,7 +64,7 @@ class techSet:
         if techKey in self._ths:
             return False
         
-        th = _techs[techKey]
+        th = techs[techKey]
         
         if th.requires == -1:
             return False
@@ -78,7 +78,7 @@ class techSet:
         return True
         
     def getSearcheables(self):
-        return set(x for x in _techs if self.canSearch(x))
+        return set(x for x in techs if self.canSearch(x))
        
     @property
     def count(self):
@@ -87,9 +87,9 @@ class techSet:
     def contains(self,techKey):
         return (techKey in self._ths)
     
-class helper:
+class Helper:
     def byteToTech(byteKey):
-        for item in _techs.values():
+        for item in techs.values():
             if item.byteKey == byteKey:
                 return item
         return None

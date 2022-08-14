@@ -5,11 +5,11 @@ print("|  __/   |  |  | |___  | |   \ \/ /  ")
 print("|_|      |__|   \____//___/   \__/   ")
 print()
 
-from . import player  
+from . import Player  
 
-from . import civilization  
+from . import Civilization  
 from . import Tilemap
-from . import city
+from . import City
 from . import Terrain
 
 class Game:
@@ -18,8 +18,8 @@ class Game:
 
 
     def __init__(self):
-        civilization.helper.registerEndTurnListener(self.endTurn)
-        player.helper.sendInfoMethod = self.executeInfo
+        Civilization.Helper.registerEndTurnListener(self.endTurn)
+        Player.Helper.sendInfoMethod = self.executeInfo
 
         self.turn:int = 0
         self._loadScenario1()
@@ -51,14 +51,14 @@ class Game:
             self.currentYear += 1
 
     def endTurn(self):        
-        city.helper.endTurn()
-        civilization.helper.endTurn()
+        City.Helper.endTurn()
+        Civilization.Helper.endTurn()
         
         self.turn += 1
         self._advanceYear()
         
         print("TURN {}: YEAR {}".format(self.turn,self.currentYear))
-        civilization.helper.startTurn()
+        Civilization.Helper.startTurn()
 
     #networking
     def executeCmd(self,sender: int,cmd:str):
@@ -71,7 +71,7 @@ class Game:
 
     def _sendCmd(self,playerId:int,cmd:str):
         '''from GAME to PLAYERHELPER'''
-        player.helper.executeCmd(playerId,cmd)
+        Player.Helper.executeCmd(playerId,cmd)
 
     def executeInfo(self,target,info:str):
         '''from PLAYERHELPER to GAME
@@ -98,7 +98,7 @@ class Game:
             self.tilemap.tiles[(2,i)].terrain = Terrain.terrains["ARCTIC"]
             self.tilemap.tiles[(i,2)].addFeature("ROAD")
         
-        p0 = civilization.civilization(-1)
+        p0 = Civilization.Civilization(-1)
         p0.name = "Barbarians"
         p0.leaderName = "Barbarator"
         p0.adjective = "barbarian"
@@ -106,14 +106,14 @@ class Game:
         p0.color2 = "393939"
         p0.canDoDiplomacy = False
         
-        p1 = civilization.civilization()
+        p1 = Civilization.Civilization()
         p1.name = "Francia"
         p1.leaderName = "civilization"
         p1.adjective = "frank"
         p1.color = "2E63CD"
         p1.color2 = "393939"
         
-        p2 = civilization.civilization()
+        p2 = Civilization.Civilization()
         p2.name = "Holy Roman Empire"
         p2.leaderName = "Barberousse"
         p2.adjective = "holy roman"
@@ -121,7 +121,7 @@ class Game:
         p2.color2 = "393939"
 
         
-        c1 = city.city(name = "Paris", owner = p1.key, pos = (1,1))
+        c1 = City.City(name = "Paris", owner = p1.key, pos = (1,1))
         
         
-        c2 = city.city(name = "Berlin", owner = p2.key, pos = (5,5))
+        c2 = City.City(name = "Berlin", owner = p2.key, pos = (5,5))

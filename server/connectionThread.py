@@ -2,7 +2,7 @@ import threading
 import traceback
 import server
 
-class connectionThread(threading.Thread):
+class ConnectionThread(threading.Thread):
 
     def __init__(self,server,conn,ip,port):
         threading.Thread.__init__(self)
