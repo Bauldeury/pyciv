@@ -2,6 +2,7 @@ import socket
 from sqlite3 import connect
 
 from common.Game import Game
+from .ListeningThread import ListeningThread
 from .ConnectionThread import *
 
 class Server:
@@ -9,6 +10,7 @@ class Server:
     def __init__(self):
         self.connectionThreads:set[ConnectionThread] = set()
         self.listening = False
+        self.listeningThread = ListeningThread(self)
         
         self.sock = socket.socket()
         host = ""
@@ -33,12 +35,8 @@ class Server:
         
         
     def _listenForConnection(self):
-        while self.listening:
-            self.sock.listen(5)
-            (conn, (c_ip, c_port)) = self.sock.accept()
-            self.createConnectionThread(conn, c_ip, c_port)
-            
-        self.stop()
+        self.listeningThread.start()
+        print("ListeningThread started.")
        
     def createConnectionThread(self, conn, c_ip, c_port):
         print ("{}:{} opened connection".format(c_ip, c_port))
@@ -167,6 +165,14 @@ class Server:
 def main():
     s = Server()
     s.start()
+    print("Server started with success.\n")
+
+    print("You can type python cmd below for debugging purposes.")
+    while True:
+        try:
+            exec(input("Python?:"))
+        except:
+            print(traceback.format_exc())
     
                 
 if __name__ == "__main__":

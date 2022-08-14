@@ -23,7 +23,7 @@ class Tile:
         return Common.getSpecialValueProduct(self.features,special)
         
         
-    def addFeature(self,featureKey1:int):
+    def addFeature(self,featureKey1:str):
         bigKey = (featureKey1,self.terrain.key)
         semiKey = (featureKey1,None)
         newFeature:Feature.Feature = None
