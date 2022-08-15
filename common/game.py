@@ -5,12 +5,14 @@ print("|  __/   |  |  | |___  | |   \ \/ /  ")
 print("|_|      |__|   \____//___/   \__/   ")
 print()
 
+from msilib.schema import Feature
 from . import Player  
 
 from . import Civilization  
 from . import Tilemap
 from . import City
 from . import Terrain
+from . import Feature
 
 class Game:
 
@@ -96,7 +98,7 @@ class Game:
         self.tilemap = Tilemap.Tilemap(10,10)
         for i in range(5):
             self.tilemap.tiles[(2,i)].terrain = Terrain.terrains["ARCTIC"]
-            self.tilemap.tiles[(i,2)].addFeature("ROAD")
+            self.tilemap.tiles[(i,2)].features.append(Feature.features["RAILROAD"])
         
         p0 = Civilization.Civilization(-1)
         p0.name = "Barbarians"

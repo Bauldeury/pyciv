@@ -89,8 +89,8 @@ class MapPanel(tk.Frame):
         self._SetSprite(image, coordXY, MapSpriteHelper.TerrainSpriteIndex(tile.terrain))  
 
         if tile.features != None:
-            for i in tile.features:
-                self._SetSprite(image,coordXY,MapSpriteHelper.FeatureSpriteIndex(tile.features[i]))
+            for feature in tile.features:
+                self._SetSprite(image,coordXY,MapSpriteHelper.FeatureSpriteIndex(feature))
 
 
     def _SetSprite(self, image:Image.Image, coordXY:"tuple[int,int]",spriteIndex:"tuple[int,int]"):
@@ -170,7 +170,7 @@ class MapPanel(tk.Frame):
         tile.terrain = Terrain.Helper.intToTerrain(int(args["t"]))
         if 'f' in args:
             for f in args['f'].split(','):
-                tile.addFeature(Feature.Helper.intToFeature(int(f)).key[0])
+                tile.features.append(Feature.Helper.intToFeature(int(f)))
 
         self.tilemap.tiles[coord] = tile
 
@@ -179,8 +179,8 @@ class MapSpriteHelper:
     def TerrainSpriteIndex(terrain:Terrain.Terrain) -> "tuple[int,int]":
         return (terrain.intKey % 8,terrain.intKey // 8)
     def FeatureSpriteIndex(feature:Feature.Feature) -> "tuple[int,int]":
-        if feature.key[0] == "ROAD": return (0,4)
-        elif feature.key[0] == "RAILROAD": return (0,5)
+        if feature.key == "ROAD": return (0,4)
+        elif feature.key == "RAILROAD": return (0,5)
         else : return (5,7)
     def FogSpriteIndex(): return (6,7)
     def UnexploredSpriteIndex(): return (7,7)

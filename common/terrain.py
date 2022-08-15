@@ -11,11 +11,15 @@ class Terrain:
         self.description = "TerrainDescription"
         self.foodYield = 0
         self.productionYield = 0
-        self.commerceYield = 0
+        self.goldYield = 0
         self.travelCost = 1
-        self.defensiveBonus = 0
-        self.availableFeatures = set()
-        self.ttype = 0 #0 for ground, 1 for maritime
+        self.defensiveBonus = 0 
+        '''50 is +50%'''
+        self.terrainType = 0
+        '''0:ground(default), 1:maritime'''
+        self.tags:"list[str]|None" = None
+
+
         terrains[self.key] = self
         
     def __repr__(self):
@@ -24,20 +28,32 @@ class Terrain:
 def _loadTerrains():
     with open(Common.getCommonPath()+"terrains.csv", newline ="") as csvfile:
         reader = csv.reader(csvfile, delimiter=';')
+        firstRow = True
         for row in reader:
-            if row[0] != "key":
-                key = row[0]
+            if firstRow:
+                firstRow = False
+                cKey = row.index("key")
+                cName = row.index("name")
+                cDescription = row.index("description")
+                cFoodYield = row.index("foodYield")
+                cProductionYield = row.index("productionYield")
+                cGoldYield = row.index("goldYield")
+                cTravelCost = row.index("travelCost")
+                cDefensiveBonus = row.index("defensiveBonus")
+                cTerrainType = row.index("terrainType")
+
+            else:
+                key = row[cKey]
                 t = Terrain(key)
                 
-                t.name = row[1]
-                t.description = row[2]
-                t.foodYield = float(row[3])
-                t.productionYield = float(row[4])
-                t.commerceYield = float(row[5])
-                t.travelCost = float(row[6])
-                t.defensiveBonus = int(row[7])
-                t.availableFeatures = row[8].split(',')
-                t.ttype = int(row[9])
+                t.name = row[cName]
+                t.description = row[cDescription]
+                t.foodYield = float(row[cFoodYield])
+                t.productionYield = float(row[cProductionYield])
+                t.goldYield = float(row[cGoldYield])
+                t.travelCost = float(row[cTravelCost])
+                t.defensiveBonus = int(row[cDefensiveBonus])
+                t.terrainType = int(row[cTerrainType])
                 
 class Helper:
     def intToTerrain(intKey:int) -> "Terrain|None":

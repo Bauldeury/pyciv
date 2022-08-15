@@ -39,8 +39,8 @@ class Player:
             for coord in tm.tiles:
                 if tm.tiles[coord].updateID > updateId:
                     info += ' tx{}y{}t{}'.format(coord[0],coord[1],tm.tiles[coord].terrain.intKey)
-                    if tm.tiles[coord].features != None:
-                        info += 'f{}'.format(','.join(str(tm.tiles[coord].features[x].intKey) for x in tm.tiles[coord].features))
+                    if len(tm.tiles[coord].features)>0:
+                        info += 'f{}'.format(','.join(str(feature.intKey) for feature in tm.tiles[coord].features))
 
             self._sendInfo(info)
 

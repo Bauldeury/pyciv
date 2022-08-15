@@ -5,15 +5,15 @@ from . import Common
 features:"dict[str,Feature]" = {}
 class Feature:
     def __init__(self,key):
-        self.key:"tuple[str,str|None]" = key
+        self.key:str = key
         self.intKey:int = len(features)
-        self.name = "FeatureName"
-        self.description = "FeatureDescription"
-        self.requires = None
-        self.constraints = None
-        self.ftype = 0 #0 for natural features, 1 for resources, 2 for roads, 3 for other improvements
-        self.workAmount = 50
-        self.specials = None
+        self.name:str = "FeatureName"
+        self.description:str = "FeatureDescription"
+        self.requiresTech:str = None
+        self.constraints:"list[str]" = []
+        self.workAmount:int = 0
+        self.specials:"list[str]" = []
+        self.tags:"list[str]" = []
         features[self.key] = self
     
     def __repr__(self):
@@ -22,18 +22,31 @@ class Feature:
 def _loadFeatures():
     with open(Common.getCommonPath()+"features.csv", newline ="") as csvfile:
         reader = csv.reader(csvfile, delimiter=';')
+        firstRow = True
         for row in reader:
-            if row[0] != "key":
-                key =(row[0],row[1] if row[1]!="" else None)
+            if firstRow:
+                firstRow = False
+                cKey = row.index("key")
+                cName = row.index("name")
+                cDescription = row.index("description")
+                cRequiresTech = row.index("requiresTech")
+                cConstraints = row.index("constraints")
+                cWorkAmount = row.index("workAmount")
+                cSpecials = row.index("specials")
+                cTags = row.index("tags")
+            else:
+                key = row[cKey]
                 f = Feature(key)
-                
-                f.name = row[2]
-                f.description = row[3]
-                f.requires = row[4] if row[4] != "" else None
-                f.constraints = row[5].split(',') if row[5] != "" else None
-                f.ftype = int(row[6]) #0 for natural features, 1 for resources, 2 for roads, 3 for other improvements
-                f.workAmount = int(row[7]) if row[7] != "" else None
-                f.specials = row[8].split(',') if row[8] != "" else None
+
+                f.name = row[cName]
+                f.description = row[cDescription]
+                f.requiresTech = row[cRequiresTech] if row[cRequiresTech] != "" else None
+                f.constraints = row[cConstraints].split(',') if row[cConstraints] != "" else []
+                f.workAmount = int(row[cWorkAmount]) if row[cWorkAmount] != "" else 0
+                f.specials = row[cSpecials].split(',') if row[cSpecials] != "" else []
+                f.tags = row[cTags].split(',') if row[cTags] != "" else []
+
+                features[key]=f
 
 class Helper:
     def intToFeature(intKey:int)->"Feature|None":
