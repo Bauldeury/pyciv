@@ -97,8 +97,10 @@ class Game:
         self.currentYear = -8000
         self.tilemap = Tilemap.Tilemap(10,10)
         for i in range(5):
+            self.tilemap.tiles[(1,2)].features.append(Feature.features["MINE"])
             self.tilemap.tiles[(2,i)].terrain = Terrain.terrains["ARCTIC"]
             self.tilemap.tiles[(i,2)].features.append(Feature.features["RAILROAD"])
+            self.tilemap.tiles[(2,2)].features.append(Feature.features["MINE"])
         
         p0 = Civilization.Civilization(-1)
         p0.name = "Barbarians"

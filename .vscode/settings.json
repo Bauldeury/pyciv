@@ -11,5 +11,6 @@
         "-p",
         "test_*.py"
     ],
-    "python.testing.cwd": ""
+    "python.testing.cwd": "",
+    "python.formatting.provider": "black"
 }

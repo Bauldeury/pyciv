@@ -45,5 +45,3 @@ def test_features_integrity():
             else:
                 assert row[c_key] not in keys #check for duplicate keys
                 keys.append(row[c_key])
-
-

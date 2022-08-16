@@ -4,6 +4,7 @@ class ConsolePanel(tk.Message):
     def __init__(self,parent):
         tk.Message.__init__(self,parent,text="", relief=tk.SUNKEN, bg = "WHITE",anchor = tk.NW)
         self.lines = []
+        self.focus()
 
     def print(self,message: str):
         while len(self.lines) >= 5:
