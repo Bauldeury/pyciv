@@ -1,0 +1,5 @@
+key;name;description;move;strength;cost;requiresTech;tags;specials
+SETTLER;settler;Used to found cities;2;0;100;;CIVILIAN;FOUND_CITY
+WORKER;worker;Used to build improvement;2;0;30;;CIVILIAN;BUILD_IMPROVEMENT
+WARRIOR;warrior;Early game melee unit;2;10;20;;MELEE;
+ARCHER;archer;Early game ranged unit;2;10;30;ARCHERY;RANGED;RANGE_2

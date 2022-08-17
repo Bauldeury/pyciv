@@ -2,7 +2,7 @@ import csv
 
 from . import Common
 
-techs = {}
+techs:"dict[str,Tech]" = {}
 class Tech:
     def __init__(self,key:str):
         self.key:str = key

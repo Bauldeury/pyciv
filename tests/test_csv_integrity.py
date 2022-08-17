@@ -19,10 +19,10 @@ def test_terrains_integrity():
                 assert "defensiveBonus" in row
                 assert "terrainType" in row
                 first_row = False
-                c_key = row.index("key")
+                cKey = row.index("key")
             else:
-                assert row[c_key] not in keys #check for duplicate keys
-                keys.append(row[c_key])
+                assert row[cKey] not in keys #check for duplicate keys
+                keys.append(row[cKey])
 
 def test_features_integrity():
     with open('./common/features.csv', newline ="") as csvfile:
@@ -41,7 +41,34 @@ def test_features_integrity():
                 assert "specials" in row
                 assert "tags" in row
                 first_row = False
-                c_key = row.index("key")
+                cKey = row.index("key")
             else:
-                assert row[c_key] not in keys #check for duplicate keys
-                keys.append(row[c_key])
+                assert row[cKey] not in keys #check for duplicate keys
+                keys.append(row[cKey])
+
+def test_units_integrity():
+    import common.Tech
+    with open('./common/units.csv', newline ="") as csvfile:
+        reader = csv.reader(csvfile, delimiter=';')
+
+        first_row = True
+        keys = list()
+        for row in reader:
+            if first_row:
+                assert "key" in row
+                assert "name" in row
+                assert "description" in row
+                assert "requiresTech" in row
+                assert "move" in row
+                assert "strength" in row
+                assert "cost" in row
+                assert "specials" in row
+                assert "tags" in row
+                first_row = False
+                cKey = row.index("key")
+                cRequiresTech = row.index("requiresTech")
+            else:
+                assert row[cKey] not in keys #check for duplicate keys
+                keys.append(row[cKey])
+
+                assert row[cRequiresTech] == "" or row[cRequiresTech] in common.Tech.techs

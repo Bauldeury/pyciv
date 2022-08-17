@@ -46,8 +46,6 @@ def _loadFeatures():
                 f.specials = row[cSpecials].split(',') if row[cSpecials] != "" else []
                 f.tags = row[cTags].split(',') if row[cTags] != "" else []
 
-                features[key]=f
-
 class Helper:
     def intToFeature(intKey:int)->"Feature|None":
         for item in features.values():

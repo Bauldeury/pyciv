@@ -13,6 +13,7 @@ from . import Tilemap
 from . import City
 from . import Terrain
 from . import Feature
+from . import Unit
 
 class Game:
 

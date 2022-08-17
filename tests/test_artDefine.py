@@ -1,6 +1,7 @@
 import client.ArtDefine
 import common.Terrain
 import common.Feature
+import common.Unit
 
 
 def test_exhaustivity():
@@ -11,3 +12,6 @@ def test_exhaustivity():
         assert terrainKey in client.ArtDefine.tileArtDefines
     for featureKey in common.Feature.features:
         assert featureKey in client.ArtDefine.tileArtDefines
+
+    for unitKey in common.Unit.unitTypes:
+        assert unitKey in client.ArtDefine.unitArtDefines
