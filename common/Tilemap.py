@@ -22,8 +22,8 @@ class Tilemap:
 
                 
     def __del__(self):
-        if self.tilemapId in tilemaps:
-            del tilemaps[self.tilemapId]
+        if tilemaps != None and self.tilemapId in tilemaps:
+             tilemaps.pop(self.tilemapId)
                
     def getTile(self,pos):
         '''Pos: tuple[int,int]'''
@@ -39,13 +39,13 @@ class Tilemap:
         return True
         
     def getTravelCost(self, pos1, pos2):
-        if helper.chebyshevDistance(pos1,pos2) != 1:
+        if Helper.chebyshevDistance(pos1,pos2) != 1:
             return None
         else:
             return max(self.getTile[pos1].travelCost,self.getTile[pos2].travelCost)
         
             
-class helper:
+class Helper:
     def offsetN(pos):
         return (pos[0],pos[1]+1)
     def offsetS(pos):
@@ -65,7 +65,7 @@ class helper:
         return (pos[0]+1,pos[1]-1)
         
     def posNeighboors(pos):
-        return [helper.offsetN(pos),helper.offsetNE(pos),helper.offsetE(pos),helper.offsetSE(pos),helper.offsetS(pos),helper.offsetSW(pos),helper.offsetW(pos),helper.offsetNW(pos)]
+        return [Helper.offsetN(pos),Helper.offsetNE(pos),Helper.offsetE(pos),Helper.offsetSE(pos),Helper.offsetS(pos),Helper.offsetSW(pos),Helper.offsetW(pos),Helper.offsetNW(pos)]
             
     def euclidianDistance(pos1,pos2):
         return math.sqrt(abs(pos1[0]-pos2[0])**2+abs(pos1[1]-pos2[1])**2)

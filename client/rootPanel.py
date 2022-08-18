@@ -9,7 +9,6 @@ class RootPanel(tk.Tk):
         
         self.title("Client V2")
         self.client = client
-        self.playerId = None
         
         self._initWidgets()
         
@@ -86,19 +85,9 @@ class RootPanel(tk.Tk):
     def executeInfo(self,info:str):
         if info[0:3].lower() == "ch ": #chat
             self.consolePanel.print(info[3:])
-        elif info[0:13] == "returnbindok ":
-            self._onBind(info.split(' ')[1])
-        elif info == "returnunbindok":
-            self._onUnbind()
-        elif info[0:14] == "returnmapsize ":
-            self.mapPanel.executeInfo(info)
         elif info[0:13] == "returnupdate ":
-            self.mapPanel.executeInfo(info)
-
-    def _onBind(self,playerID:int):
-        self.playerId = playerID
-        self.mapPanel.onBind(playerID)
-
-    def _onUnbind(self):
-        self.playerId = None
-        self.mapPanel.onUnbind()
+            self.mapPanel.Draw()
+        elif info[0:13] == "returnbindok ":
+            self.mapPanel.Draw()
+        elif info == "returnunbindok":
+            self.mapPanel.Draw()

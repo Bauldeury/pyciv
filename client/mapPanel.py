@@ -3,10 +3,9 @@ from PIL import Image, ImageTk, ImageDraw, ImageFont
 
 from common import Tile
 from common import Tilemap
-from common import Terrain
 from common import Feature
-from common import Common
 from client import ArtDefine
+from client import DataSynchroniser
 
 
 class MapPanel(tk.Frame):
@@ -18,7 +17,6 @@ class MapPanel(tk.Frame):
         tk.Frame.__init__(self, parent, relief=tk.SUNKEN, bg="WHITE")
 
         self.zoom: int = 2
-        self.playerID = None
         self.sendCmd_func = sendCmd_func
 
         self.xscroll = tk.Scrollbar(self, orient="horizontal")
@@ -27,6 +25,7 @@ class MapPanel(tk.Frame):
         self.spriteSheet = Image.open(MapPanel.TILEMAP_PATH)
         self.canvas = tk.Canvas(self)
         self.tkpicid = self.canvas.create_image(0, 0)
+
         self.Draw()
 
         self.canvas.grid(row=0, column=0, sticky="nsew")
@@ -45,6 +44,7 @@ class MapPanel(tk.Frame):
         self.xscroll.config(command=self.canvas.xview)
 
         self._refreshScrollers()
+        self.canvas.bind("<Button-1>", self._onClick)
 
     def mouse_scroll(self, evt):
         # https://stackoverflow.com/questions/56043767/show-large-image-using-scrollbar-in-python
@@ -59,21 +59,31 @@ class MapPanel(tk.Frame):
                 int(-1 * (evt.delta / 120)), "units"
             )  # For windows
 
+    def _refreshScrollers(self):
+        # Assign the region to be scrolled
+        self.canvas.config(scrollregion=self.canvas.bbox("all"))
+        # initial scroll
+        # self.canvas.xview_moveto(0)
+        # self.canvas.yview_moveto(0)
+            
+
     def Draw(self):
-        if self.playerID == None:
+        if DataSynchroniser.DataSynchroniser.playerId == None:
             self.pic = Image.new(mode="RGB", size=(256, 128), color=(0, 0, 0))
             drawer = ImageDraw.Draw(self.pic)
             myFont = ImageFont.truetype(
                 "client/assets/fonts/TitilliumWeb-Regular.ttf", 24
             )
             drawer.text((2, 2), "Unbound", font=myFont, fill=(255, 255, 255))
-        elif Tilemap.tilemaps[0] == None:
+
+        elif 0 not in Tilemap.tilemaps:
             self.pic = Image.new(mode="RGB", size=(256, 128), color=(0, 0, 0))
             drawer = ImageDraw.Draw(self.pic)
             myFont = ImageFont.truetype(
                 "client/assets/fonts/TitilliumWeb-Regular.ttf", 24
             )
             drawer.text((2, 2), "Map loading...", font=myFont, fill=(255, 255, 0))
+
         else:
             self.pic = Image.new(
                 mode="RGB",
@@ -82,13 +92,14 @@ class MapPanel(tk.Frame):
                     MapPanel.TILE_SIZE * Tilemap.tilemaps[0].sizeY * self.zoom,
                 ),
             )
-
             for (x, y) in Tilemap.tilemaps[0].tiles:
                 self._SetTile(self.pic, (x, y), Tilemap.tilemaps[0].tiles[(x, y)])
 
         self.tkpic = ImageTk.PhotoImage(self.pic)
         # self.canvas.create_image(0,0,image = self.tkpic)
         self.canvas.itemconfig(self.tkpicid, image=self.tkpic)
+        self._refreshScrollers()
+        
 
     def _SetTile(self, image: Image.Image, coordXY: "tuple[int,int]", tile: Tile.Tile):
         """Only called from the draw method
@@ -143,67 +154,3 @@ class MapPanel(tk.Frame):
         # print ("clicked at {},{}".format(int(event.x/(mapPanel.TILE_SIZE*self.zoom)), int(event.y/(mapPanel.TILE_SIZE*self.zoom))))
         coords = tuple(int(i / (MapPanel.TILE_SIZE * self.zoom)) for i in coords)
         print("Clicked: {}".format(coords))
-
-    def onBind(self, playerID: int):
-        self.playerID = playerID
-        # self.Draw()  # too early to draw, don't know the size yet
-        self._refreshScrollers()
-
-        # init interaction
-        self.canvas.bind("<Button-1>", self._onClick)
-
-        # get initial infos
-        self.sendCmd("getmapsize")
-
-    def onUnbind(self):
-        self.playerID = None
-        self.Draw()
-        self._refreshScrollers()
-
-        # unplug interaction
-        self.canvas.unbind("<Button-1>")  # removes all methods on button1
-
-        # clear data
-        if Tilemap.tilemaps[0] != None:
-            del Tilemap.tilemaps[0]
-
-    def _refreshScrollers(self):
-        # Assign the region to be scrolled
-        self.canvas.config(scrollregion=self.canvas.bbox("all"))
-        # initial scroll
-        self.canvas.xview_moveto(0)
-        self.canvas.yview_moveto(0)
-
-    def executeInfo(self, info: str):
-        if info[0:14] == "returnmapsize ":
-            _, x, y = info.split(" ")
-            Tilemap.Tilemap(int(x), int(y),0)
-            self.sendCmd("getupdate -1")
-        elif info[0:13] == "returnupdate ":
-            strings = info.split(" ")
-            Common.updateId = int(strings[1])
-            for string in strings:
-                if string[0] == "t":
-                    self._updateTileFromString(string)
-
-            self.Draw()
-            self._refreshScrollers()
-
-    def sendCmd(self, cmd: str):
-        self.sendCmd_func(cmd)
-
-    def _updateTileFromString(self, string: str):
-        """reads and works out strings like this: t[x%][y%][u:unexplored][o:fogofwar][t%:terrainID][f%:featureID]"""
-        args = Common.decomposeStrToArgs(
-            string[1:], boolArgs=["u", "o"], intArgs=["x", "y", "t"], strArgs=["f"]
-        )
-
-        coord = (int(args["x"]), int(args["y"]))
-        tile = Tile.Tile()
-        tile.updateID = Common.updateId
-        tile.terrain = Terrain.Helper.intToTerrain(int(args["t"]))
-        if "f" in args:
-            for f in args["f"].split(","):
-                tile.features.append(Feature.Helper.intToFeature(int(f)))
-
-        Tilemap.tilemaps[0].tiles[coord] = tile

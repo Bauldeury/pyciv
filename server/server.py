@@ -46,7 +46,7 @@ class Server:
         thread.start()
        
     def removeConnectionThread(self, thread: ConnectionThread):
-        if thread.playerID != None:
+        if thread.playerId != None:
             self.unbindConnectionToPlayer(thread)
 
         if thread in self.connectionThreads:
@@ -55,7 +55,7 @@ class Server:
     def _playerIDtoThread(self, playerID: int):
         '''returns the thread or -None- if not found'''
         for thread in self.connectionThreads:
-            if thread.playerID == playerID:
+            if thread.playerId == playerID:
                 return thread
         return None
 
@@ -70,18 +70,18 @@ class Server:
     def bindConnectionToPlayer(self, thread: ConnectionThread, playerId: int):
         if self._playerIDtoThread(playerId) != None:
             thread.executeInfo(("error: playerId {} already bound".format(playerId)))
-        elif thread.playerID != None:
+        elif thread.playerId != None:
             thread.executeInfo(("error: thread already bound".format(playerId)))
         else:
             self._sendCmd(playerId,"createplayer")
-            thread.playerID = playerId
+            thread.playerId = playerId
             thread.playerName = "player#{}".format(playerId)
             thread.executeInfo("returnbindok {}".format(playerId))
 
     def unbindConnectionToPlayer(self, thread: ConnectionThread):
-        playerId = thread.playerID
+        playerId = thread.playerId
         self._sendCmd(playerId,"deleteplayer")
-        thread.playerID = None
+        thread.playerId = None
         thread.playerName = "UT"
         thread.executeInfo("returnunbindok")
 
@@ -107,10 +107,10 @@ class Server:
                 sender.executeInfo("error: {} is unvalid integer".format(id))
 
         elif cmd.lower() == "getbind":
-            self._sendInfo({sender},"returnbind {}".format(sender.playerID))
+            self._sendInfo({sender},"returnbind {}".format(sender.playerId))
 
         elif cmd.lower() == "unbind":
-            if sender.playerID != None:
+            if sender.playerId != None:
                 self.unbindConnectionToPlayer(sender)
             else:
                 sender.executeInfo("error: no playerId to unbind")
@@ -121,8 +121,8 @@ class Server:
             sender.executeInfo("error: forbidden command")
 
         else:
-            if sender.playerID != None:
-                self._sendCmd(sender.playerID,cmd)
+            if sender.playerId != None:
+                self._sendCmd(sender.playerId,cmd)
             else:
                 sender.executeInfo("error: cmd not understood at the server level")
 

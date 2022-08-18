@@ -97,11 +97,11 @@ class Game:
     def _loadScenario1(self):
         self.currentYear = -8000
         Tilemap.tilemaps[0] = Tilemap.Tilemap(10,10)
+        Tilemap.tilemaps[0].tiles[(1,2)].features.append(Feature.features["MINE"])
+        Tilemap.tilemaps[0].tiles[(2,2)].features.append(Feature.features["MINE"])
         for i in range(5):
-            Tilemap.tilemaps[0].tiles[(1,2)].features.append(Feature.features["MINE"])
             Tilemap.tilemaps[0].tiles[(2,i)].terrain = Terrain.terrains["ARCTIC"]
             Tilemap.tilemaps[0].tiles[(i,2)].features.append(Feature.features["RAILROAD"])
-            Tilemap.tilemaps[0].tiles[(2,2)].features.append(Feature.features["MINE"])
             
         
         p0 = Civilization.Civilization(-1)

@@ -4,4 +4,4 @@ Imports (might be needed for some)
 import common
 
 Add feature on terrain:
-common.Tilemap.Tilemap.tilemaps[0].tiles[(1,1)].addFeature("RAILROAD")
+common.Tilemap.tilemaps[0].tiles[(1,1)].features.append(common.Feature.features["RAILROAD"])

@@ -9,7 +9,7 @@ class ConnectionThread(threading.Thread):
         self.ip = ip
         self.port = port
 
-        self.playerID = None
+        self.playerId = None
         self.playerName = "UT" #UT: Unbound Thread
         
         print("[+] Nouveau thread pour {}:{}".format(self.ip, self.port))
