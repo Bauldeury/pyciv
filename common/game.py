@@ -68,7 +68,7 @@ class Game:
         '''from SERVER to GAME'''
 
         if cmd == "getmapsize":
-            self._sendInfo({sender},"returnmapsize {} {}".format(self.tilemap.sizeX,self.tilemap.sizeY))
+            self._sendInfo({sender},"returnmapsize {} {}".format(Tilemap.tilemaps[0].sizeX,Tilemap.tilemaps[0].sizeY))
         else:
             self._sendCmd(sender,cmd)
 
@@ -96,12 +96,13 @@ class Game:
 
     def _loadScenario1(self):
         self.currentYear = -8000
-        self.tilemap = Tilemap.Tilemap(10,10)
+        Tilemap.tilemaps[0] = Tilemap.Tilemap(10,10)
         for i in range(5):
-            self.tilemap.tiles[(1,2)].features.append(Feature.features["MINE"])
-            self.tilemap.tiles[(2,i)].terrain = Terrain.terrains["ARCTIC"]
-            self.tilemap.tiles[(i,2)].features.append(Feature.features["RAILROAD"])
-            self.tilemap.tiles[(2,2)].features.append(Feature.features["MINE"])
+            Tilemap.tilemaps[0].tiles[(1,2)].features.append(Feature.features["MINE"])
+            Tilemap.tilemaps[0].tiles[(2,i)].terrain = Terrain.terrains["ARCTIC"]
+            Tilemap.tilemaps[0].tiles[(i,2)].features.append(Feature.features["RAILROAD"])
+            Tilemap.tilemaps[0].tiles[(2,2)].features.append(Feature.features["MINE"])
+            
         
         p0 = Civilization.Civilization(-1)
         p0.name = "Barbarians"

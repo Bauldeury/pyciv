@@ -1,5 +1,5 @@
 import common.Common as Common
-from common.Tilemap import Tilemap
+import common.Tilemap as Tilemap
 
 
 class Player:
@@ -54,7 +54,7 @@ class Player:
 
 class Helper:
     sendInfoMethod = None 
-    mp:Tilemap = None
+    mp:Tilemap.Tilemap = None
 
     def executeCmd(playerId:int,cmd:str):
         '''from GAME to PLAYERHELPER'''

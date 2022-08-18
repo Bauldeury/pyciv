@@ -3,15 +3,15 @@ import math
 from . import Tile
     
 
+tilemaps:"dict[int,Tilemap]" = {}
 class Tilemap:
-    tilemaps = {}
 
     def __init__(self,sizeX:int,sizeY:int,tilemapId:int=0):
-        if tilemapId in Tilemap.tilemaps:
+        if tilemapId in tilemaps:
             raise Exception("TilemapID already existing")
 
         self.tilemapId = tilemapId
-        Tilemap.tilemaps[tilemapId] = self
+        tilemaps[tilemapId] = self
 
         self.sizeX = sizeX
         self.sizeY = sizeY
@@ -22,8 +22,8 @@ class Tilemap:
 
                 
     def __del__(self):
-        if self.tilemapId in Tilemap.tilemaps:
-            del Tilemap.tilemaps[self.tilemapId]
+        if self.tilemapId in tilemaps:
+            del tilemaps[self.tilemapId]
                
     def getTile(self,pos):
         '''Pos: tuple[int,int]'''

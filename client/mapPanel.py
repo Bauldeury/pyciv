@@ -21,8 +21,6 @@ class MapPanel(tk.Frame):
         self.playerID = None
         self.sendCmd_func = sendCmd_func
 
-        self.tilemap = None
-
         self.xscroll = tk.Scrollbar(self, orient="horizontal")
         self.yscroll = tk.Scrollbar(self, orient="vertical")
 
@@ -69,7 +67,7 @@ class MapPanel(tk.Frame):
                 "client/assets/fonts/TitilliumWeb-Regular.ttf", 24
             )
             drawer.text((2, 2), "Unbound", font=myFont, fill=(255, 255, 255))
-        elif self.tilemap == None:
+        elif Tilemap.tilemaps[0] == None:
             self.pic = Image.new(mode="RGB", size=(256, 128), color=(0, 0, 0))
             drawer = ImageDraw.Draw(self.pic)
             myFont = ImageFont.truetype(
@@ -80,13 +78,13 @@ class MapPanel(tk.Frame):
             self.pic = Image.new(
                 mode="RGB",
                 size=(
-                    MapPanel.TILE_SIZE * self.tilemap.sizeX * self.zoom,
-                    MapPanel.TILE_SIZE * self.tilemap.sizeY * self.zoom,
+                    MapPanel.TILE_SIZE * Tilemap.tilemaps[0].sizeX * self.zoom,
+                    MapPanel.TILE_SIZE * Tilemap.tilemaps[0].sizeY * self.zoom,
                 ),
             )
 
-            for (x, y) in self.tilemap.tiles:
-                self._SetTile(self.pic, (x, y), self.tilemap.tiles[(x, y)])
+            for (x, y) in Tilemap.tilemaps[0].tiles:
+                self._SetTile(self.pic, (x, y), Tilemap.tilemaps[0].tiles[(x, y)])
 
         self.tkpic = ImageTk.PhotoImage(self.pic)
         # self.canvas.create_image(0,0,image = self.tkpic)
@@ -97,9 +95,7 @@ class MapPanel(tk.Frame):
 
         image: image to draw on\n
         coordXY: [int, int] worldspace position of the tile\n"""
-        self._SetSprite(
-            image, coordXY, ArtDefine.tileArtDefines[tile.terrain.key].xy
-        )
+        self._SetSprite(image, coordXY, ArtDefine.tileArtDefines[tile.terrain.key].xy)
 
         if tile.features != None:
             for feature in tile.features:
@@ -150,7 +146,7 @@ class MapPanel(tk.Frame):
 
     def onBind(self, playerID: int):
         self.playerID = playerID
-        self.Draw()  # too early to draw, don't know the size yet
+        # self.Draw()  # too early to draw, don't know the size yet
         self._refreshScrollers()
 
         # init interaction
@@ -167,6 +163,10 @@ class MapPanel(tk.Frame):
         # unplug interaction
         self.canvas.unbind("<Button-1>")  # removes all methods on button1
 
+        # clear data
+        if Tilemap.tilemaps[0] != None:
+            del Tilemap.tilemaps[0]
+
     def _refreshScrollers(self):
         # Assign the region to be scrolled
         self.canvas.config(scrollregion=self.canvas.bbox("all"))
@@ -177,7 +177,7 @@ class MapPanel(tk.Frame):
     def executeInfo(self, info: str):
         if info[0:14] == "returnmapsize ":
             _, x, y = info.split(" ")
-            self.tilemap = Tilemap.Tilemap(int(x), int(y))
+            Tilemap.Tilemap(int(x), int(y),0)
             self.sendCmd("getupdate -1")
         elif info[0:13] == "returnupdate ":
             strings = info.split(" ")
@@ -206,5 +206,4 @@ class MapPanel(tk.Frame):
             for f in args["f"].split(","):
                 tile.features.append(Feature.Helper.intToFeature(int(f)))
 
-        self.tilemap.tiles[coord] = tile
-
+        Tilemap.tilemaps[0].tiles[coord] = tile
