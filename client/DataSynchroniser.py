@@ -1,5 +1,6 @@
 from client import Client
 
+
 from common import Tile
 from common import Tilemap
 from common import Terrain
