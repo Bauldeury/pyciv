@@ -57,7 +57,14 @@ class Client:
         self.dataSynchroniser.executeInfo(info)
         self.pMain.executeInfo(info)
 
-    def sendCmd(self, cmd:str):
+    def executeCmd(self, cmd:str):
+        """from UI to CLIENT"""
+        if cmd == "quit":
+            self.stop()
+        else:
+            self._sendCmd(cmd)
+
+    def _sendCmd(self, cmd:str):
         """from CLIENT to CONNECTION THREAD(server)"""
         encoded_cmd = cmd.encode() + b"\x04"
         print("SERVER << {}".format(encoded_cmd))

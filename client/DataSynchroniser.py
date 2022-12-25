@@ -31,7 +31,7 @@ class DataSynchroniser:
             
 
     def sendCmd(self, cmd: str):
-        self.client.sendCmd(cmd)
+        self.client.executeCmd(cmd)
 
     def _onBind(self, playerId: int):
         DataSynchroniser.playerId = playerId

@@ -1,10 +1,11 @@
 import tkinter as tk
 
+from client import Client
 from .MapPanel import MapPanel
 from .ConsolePanel import ConsolePanel
 
 class RootPanel(tk.Tk):
-    def __init__(self,client):
+    def __init__(self,client: "Client.Client"):
         tk.Tk.__init__(self)
         
         self.title("Client V2")
@@ -65,7 +66,7 @@ class RootPanel(tk.Tk):
     def onKeyPress(self,event):
         # print("Key {} pressed".format(event.char))
         if event.char.lower() == '\r': #key enter
-            print("enter pressed!")
+            # print("enter pressed!")
             self._sendConsoleCmd()
         
     def press_button(self):
@@ -76,10 +77,23 @@ class RootPanel(tk.Tk):
         message = self.consoleInputField.get()
         if message != "":
             self.consoleInputField.delete(0,tk.END)
-            self.sendCmd(message)
+            if message == "help":
+                self.consolePanel.print("""help: list of cmds
+                clear: clear the console
+                bindnew: connect on available player id
+                bind x: connect on player x, where x is a number
+                unbind: disconnect
+                quit: stop program
+                ch text: chat text to all players
+                ping: pong
+                """)
+            elif message == "clear":
+                self.consolePanel.clear()
+            else:
+                self.sendCmd(message)
 
     def sendCmd(self, cmd:str):
-        self.client.sendCmd(cmd)
+        self.client.executeCmd(cmd)
 
 
     def executeInfo(self,info:str):
