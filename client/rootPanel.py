@@ -24,14 +24,14 @@ class RootPanel(tk.Tk):
         #root
         self.rowconfigure(0,weight=1, minsize= 300)
         self.columnconfigure(0, weight= 3, minsize=300)
-        self.columnconfigure(1, weight= 1, minsize=100)
+        self.columnconfigure(1, weight= 0, minsize=300)
         self.bind('<KeyPress>',self.onKeyPress)
 
         #root>>mainPanel
         self.mainPanel = tk.Frame(self)
         self.mainPanel.columnconfigure(0,weight= 1)
         self.mainPanel.rowconfigure(0,weight= 1)
-        self.mainPanel.config(bg="RED", relief=tk.SUNKEN)
+        self.mainPanel.config(bg="#ab3030", relief=tk.SUNKEN)
         self.mainPanel.grid(row=0,column=0,sticky='nsew')
 
         #root>>mainPanel>>mapPanel
@@ -40,7 +40,7 @@ class RootPanel(tk.Tk):
         
         #root>>rightPanel
         self.rightPanel = tk.Frame(self)
-        self.rightPanel.config(bg="BLUE", relief=tk.SUNKEN)
+        self.rightPanel.config(bg="#3168ac", relief=tk.SUNKEN)
         self.rightPanel.grid(row=0,column=1,sticky='nsew')
     
         #root>>rightPanel>>consolePanel

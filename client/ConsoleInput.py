@@ -5,12 +5,13 @@ class ConsoleInput(tk.Entry):
         tk.Frame.__init__(self,parent)
         self.rootPanel=rootPanel
 
+        self.columnconfigure(0, weight= 1, minsize=100)
+        self.columnconfigure(1, weight= 0, minsize=50)
+
         self.input = tk.Entry(self)
-        # self.input.pack(side=tk.LEFT,expand=True, fill = 'x')
-        self.input.grid(row=0,column=0)
+        self.input.grid(row=0,column=0,sticky='ew')
 
         self.button = tk.Button(self, text="envoyer", command=self._press_button)
-        # self.button.pack(side=tk.RIGHT)
         self.button.grid(row=0,column=1)
 
     def _sendConsoleCmd(self):
@@ -18,15 +19,13 @@ class ConsoleInput(tk.Entry):
         if message != "":
             self.input.delete(0,tk.END)
             if message == "help":
-                self.rootPanel.consolePrint("""help: list of cmds
-                clear: clear the console
-                bindnew: connect on available player id
-                bind x: connect on player x, where x is a number
-                unbind: disconnect
-                quit: stop program
-                ch text: chat text to all players
-                ping: pong
-                """)
+                self.rootPanel.consolePrint("help: list of cmds")
+                self.rootPanel.consolePrint("clear: clear the console")
+                self.rootPanel.consolePrint("bindnew: connect on available player id")
+                self.rootPanel.consolePrint("bind x: connect on player x, where x is a number")
+                self.rootPanel.consolePrint("unbind: disconnect")
+                self.rootPanel.consolePrint("quit: stop program")
+                self.rootPanel.consolePrint("ch text: chat text to all players")
             elif message == "clear":
                 self.rootPanel.consoleClear()
             else:
