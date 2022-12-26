@@ -3,6 +3,7 @@ import tkinter as tk
 from client import Client
 from .MapPanel import MapPanel
 from .ConsolePanel import ConsolePanel
+from .ConsoleInput import ConsoleInput
 
 class RootPanel(tk.Tk):
     def __init__(self,client: "Client.Client"):
@@ -24,6 +25,7 @@ class RootPanel(tk.Tk):
         self.rowconfigure(0,weight=1, minsize= 300)
         self.columnconfigure(0, weight= 3, minsize=300)
         self.columnconfigure(1, weight= 1, minsize=100)
+        self.bind('<KeyPress>',self.onKeyPress)
 
         #root>>mainPanel
         self.mainPanel = tk.Frame(self)
@@ -46,51 +48,20 @@ class RootPanel(tk.Tk):
         # self.consolePanel.pack()
         self.consolePanel.grid(row=0,column=0,sticky='ew')
 
-
         #root>>rightPanel>>consoleInput
-        self.consoleInput = tk.Frame(self.rightPanel)
+        self.consoleInput = ConsoleInput(self.rightPanel,self)
         self.consoleInput.grid(row=1,column=0,sticky='ew')
 
-        #root>>rightPanel>>consoleInput>>consoleInputField
-        self.consoleInputField = tk.Entry(self.consoleInput)
-        self.consoleInputField.bind('<KeyPress>',self.onKeyPress)
-        # self.consoleInputField.pack(side=tk.LEFT,expand=True, fill = 'x')
-        self.consoleInputField.grid(row=0,column=0)
-
-        #root>>rightPanel>>consoleInput>>consoleInputSendButton
-        self.consoleInputSendButton = tk.Button(self.consoleInput, text="envoyer", command=self.press_button)
-        # self.consoleInputSendButton.pack(side=tk.RIGHT)
-        self.consoleInputSendButton.grid(row=0,column=1)
-        
-        
     def onKeyPress(self,event):
         # print("Key {} pressed".format(event.char))
         if event.char.lower() == '\r': #key enter
-            # print("enter pressed!")
-            self._sendConsoleCmd()
-        
-    def press_button(self):
-        print("button pressed!")
-        self._sendConsoleCmd()
+            self.consoleInput.enter_pressed()
+  
+    def consoleClear(self):
+        self.consolePanel.clear()
 
-    def _sendConsoleCmd(self):
-        message = self.consoleInputField.get()
-        if message != "":
-            self.consoleInputField.delete(0,tk.END)
-            if message == "help":
-                self.consolePanel.print("""help: list of cmds
-                clear: clear the console
-                bindnew: connect on available player id
-                bind x: connect on player x, where x is a number
-                unbind: disconnect
-                quit: stop program
-                ch text: chat text to all players
-                ping: pong
-                """)
-            elif message == "clear":
-                self.consolePanel.clear()
-            else:
-                self.sendCmd(message)
+    def consolePrint(self,txt:str):
+        self.consolePanel.print(txt)
 
     def sendCmd(self, cmd:str):
         self.client.executeCmd(cmd)
