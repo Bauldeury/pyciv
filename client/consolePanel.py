@@ -19,7 +19,7 @@ class ConsolePanel(tk.Message):
             while len(self.lines) >= self.rowCount:
                 self.lines.pop(0)
             self.lines.append(message)
-            self.config(text='\n'.join(self.lines))
+            self.config(text='\n'.join(self.lines.__reversed__()))
 
     def clear(self):
         self.lines = []

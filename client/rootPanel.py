@@ -43,14 +43,13 @@ class RootPanel(tk.Tk):
         self.rightPanel.config(bg="#3168ac", relief=tk.SUNKEN)
         self.rightPanel.grid(row=0,column=1,sticky='nsew')
     
-        #root>>rightPanel>>consolePanel
-        self.consolePanel = ConsolePanel(self.rightPanel)
-        # self.consolePanel.pack()
-        self.consolePanel.grid(row=0,column=0,sticky='ew')
-
         #root>>rightPanel>>consoleInput
         self.consoleInput = ConsoleInput(self.rightPanel,self)
-        self.consoleInput.grid(row=1,column=0,sticky='ew')
+        self.consoleInput.grid(row=0,column=0,sticky='ew')
+
+        #root>>rightPanel>>consolePanel
+        self.consolePanel = ConsolePanel(self.rightPanel)
+        self.consolePanel.grid(row=1,column=0,sticky='ew')
 
     def onKeyPress(self,event):
         # print("Key {} pressed".format(event.char))
