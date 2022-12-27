@@ -35,7 +35,7 @@ class RootPanel(tk.Tk):
         self.mainPanel.grid(row=0,column=0,sticky='nsew')
 
         #root>>mainPanel>>mapPanel
-        self.mapPanel = MapPanel(self.mainPanel,self.sendCmd)
+        self.mapPanel = MapPanel(self.mainPanel,self)
         self.mapPanel.grid(row=0,column=0,sticky='nsew')
         
         #root>>rightPanel

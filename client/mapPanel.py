@@ -13,11 +13,11 @@ class MapPanel(tk.Frame):
     TILE_SIZE: int = 32
     """unit is pixels"""
 
-    def __init__(self, parent, sendCmd_func):
+    def __init__(self, parent, rootPanel):
         tk.Frame.__init__(self, parent, relief=tk.SUNKEN, bg="WHITE")
 
         self.zoom: int = 2
-        self.sendCmd_func = sendCmd_func
+        self.rootPanel = rootPanel
 
         self.xscroll = tk.Scrollbar(self, orient="horizontal")
         self.yscroll = tk.Scrollbar(self, orient="vertical")
@@ -153,4 +153,12 @@ class MapPanel(tk.Frame):
         )
         # print ("clicked at {},{}".format(int(event.x/(mapPanel.TILE_SIZE*self.zoom)), int(event.y/(mapPanel.TILE_SIZE*self.zoom))))
         coords = tuple(int(i / (MapPanel.TILE_SIZE * self.zoom)) for i in coords)
-        print("Clicked: {}".format(coords))
+        #print("Clicked: {}".format(coords))
+        if 0 in Tilemap.tilemaps:
+            def _describeTile(tile:Tile.Tile)->str:
+                if len(tile.features)>0:
+                    return tile.terrain.name + "," + ",".join(x.name for x in tile.features)
+                else:
+                    return tile.terrain.name
+
+            self.rootPanel.consolePrint("{} {}".format(coords,_describeTile(Tilemap.tilemaps[0].getTile(coords))))
