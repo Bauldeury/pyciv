@@ -42,6 +42,7 @@ class RootPanel(tk.Tk):
         self.rightPanel = tk.Frame(self)
         self.rightPanel.config(bg="#3168ac", relief=tk.SUNKEN)
         self.rightPanel.grid(row=0,column=1,sticky='nsew')
+        self.rightPanel.columnconfigure(0,weight= 1)
     
         #root>>rightPanel>>consoleInput
         self.consoleInput = ConsoleInput(self.rightPanel,self)
