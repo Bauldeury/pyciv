@@ -13,9 +13,12 @@ class ConsolePanel(tk.Message):
         self.focus()
 
     def print(self,message: str):
-        if len(message) > self.widthInChar:
-            self.print(message[:self.widthInChar])
+        if '\n' in message:
+            for x in message.split('\n').__reversed__():
+                self.print(x)
+        elif len(message) > self.widthInChar:
             self.print(message[self.widthInChar:])
+            self.print(message[:self.widthInChar])
         else:
             while len(self.lines) >= self.rowCount:
                 self.lines.pop(0)

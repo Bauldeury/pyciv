@@ -1,14 +1,25 @@
 from . import Building
+from . import Common
 
-_cities = {}
 class City:
     _citiesNextKey = 0
+    cities:"dict[int,City]" = {}
     
     #ADMIN    
-    def __init__(self, pos = (0,0), name = "Noname", owner = 0):
-        self.key = City._citiesNextKey
-        City._citiesNextKey += 1
-        _cities[self.key] = self
+    def __init__(self, pos:"tuple[int,int]" = (0,0), name = "Noname", owner = 0, key = None):
+        if key == None:
+            self.key = City._citiesNextKey
+        else:
+            self.key = key
+
+        if self.key >= City._citiesNextKey:
+            City._citiesNextKey = self.key+1
+
+        if self.key in City.cities:
+            print("WARNING, City#{} already in cities. Deleting the old instance.".format(self.key))
+            City.cities.pop(self.key)
+        City.cities[self.key] = self
+        self.updateID:int = 0
         
         self.name = name
         self.owner = owner
@@ -46,6 +57,7 @@ class City:
         #other computations
         self._properties["PRODUCTION_YIELD"] = 3 + self.buildings.special("PRODUCTION_YIELD")
         self._properties["COMMERCE_YIELD"] = self.population + self.buildings.special("COMMERCE_YIELD")
+
         
     
     @property
@@ -92,16 +104,21 @@ class City:
                 self._computeFlag = True
             
             
+        #updateid
+        self.updateID = Common.updateId
             
         self._computeProperties()
 
 class Helper():
     def endTurn():
-        for i_city in _cities:
-            _cities[i_city].endTurn()
+        for i_city in City.cities:
+            City.cities[i_city].endTurn()
             
-    def getCitiesOnPos(pos):
-        return set(_cities[x] for x in _cities if _cities[x].pos == pos)
+    def getCityOnPos(pos:"tuple[int,int]"):
+        for x in City.cities:
+            if City.cities[x].pos == pos:
+                return City.cities[x]
+        return None
         
     def getCitiesOfOwner(ownerKey):
-        return set(_cities[x] for x in _cities if _cities[x].owner == ownerKey)
+        return set(City.cities[x] for x in City.cities if City.cities[x].owner == ownerKey)

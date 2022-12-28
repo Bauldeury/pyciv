@@ -1,5 +1,6 @@
 import common.Common as Common
 import common.Tilemap as Tilemap
+import common.City as City
 
 
 class Player:
@@ -41,6 +42,10 @@ class Player:
                     info += ' tx{}y{}t{}'.format(coord[0],coord[1],tm.tiles[coord].terrain.intKey)
                     if len(tm.tiles[coord].features)>0:
                         info += 'f{}'.format(','.join(str(feature.intKey) for feature in tm.tiles[coord].features))
+
+            for city in City.City.cities.values():
+                if city.updateID > updateId:
+                    info += " cx{}y{}i{}o{}n{}!p{}".format(city.pos[0],city.pos[1],city.key,city.owner,city.name,city.population)
 
             self._sendInfo(info)
 

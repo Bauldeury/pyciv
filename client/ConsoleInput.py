@@ -19,13 +19,14 @@ class ConsoleInput(tk.Entry):
         if message != "":
             self.input.delete(0,tk.END)
             if message == "help":
-                self.rootPanel.consolePrint("help: list of cmds")
-                self.rootPanel.consolePrint("clear: clear the console")
-                self.rootPanel.consolePrint("bindnew: connect on available player id")
-                self.rootPanel.consolePrint("bind x: connect on player x, where x is a number")
-                self.rootPanel.consolePrint("unbind: disconnect")
-                self.rootPanel.consolePrint("quit: stop program")
-                self.rootPanel.consolePrint("ch text: chat text to all players")
+                helptext = "help: list of cmds"
+                helptext += "\nclear: clear the console"
+                helptext += "\nbindnew: connect on available player id"
+                helptext += "\nbind x: connect on player x, where x is a number"
+                helptext += "\nunbind: disconnect"
+                helptext += "\nquit: stop program"
+                helptext += "\nch text: chat text to all players"
+                self.rootPanel.consolePrint(helptext)
             elif message == "clear":
                 self.rootPanel.consoleClear()
             else:

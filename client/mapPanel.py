@@ -4,6 +4,7 @@ from PIL import Image, ImageTk, ImageDraw, ImageFont
 from common import Tile
 from common import Tilemap
 from common import Feature
+from common import City
 from client import ArtDefine
 from client import DataSynchroniser
 
@@ -155,10 +156,13 @@ class MapPanel(tk.Frame):
         coords = tuple(int(i / (MapPanel.TILE_SIZE * self.zoom)) for i in coords)
         #print("Clicked: {}".format(coords))
         if 0 in Tilemap.tilemaps:
-            def _describeTile(tile:Tile.Tile)->str:
-                if len(tile.features)>0:
-                    return tile.terrain.name + "," + ",".join(x.name for x in tile.features)
-                else:
-                    return tile.terrain.name
-
-            self.rootPanel.consolePrint("{} {}".format(coords,_describeTile(Tilemap.tilemaps[0].getTile(coords))))
+            tile:Tile.Tile = Tilemap.tilemaps[0].getTile(coords)
+            if tile != None:
+                text = "{} {}".format(coords, tile.terrain.name)
+                for f in tile.features:
+                    text += ",{}".format(f.name)
+                city:City.City = City.Helper.getCityOnPos(coords)
+                if city != None:
+                    text += "\n{}(owner:{})".format(city.name,city.owner)
+                text += "\n--------"
+                self.rootPanel.consolePrint(text)
