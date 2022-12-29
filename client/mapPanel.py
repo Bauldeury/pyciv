@@ -5,6 +5,7 @@ from common import Tile
 from common import Tilemap
 from common import Feature
 from common import City
+from common import Civilization
 from client import ArtDefine
 from client import DataSynchroniser
 
@@ -23,7 +24,7 @@ class MapPanel(tk.Frame):
         self.xscroll = tk.Scrollbar(self, orient="horizontal")
         self.yscroll = tk.Scrollbar(self, orient="vertical")
 
-        self.spriteSheet = Image.open(MapPanel.TILEMAP_PATH)
+        self.tileSpriteSheet = Image.open(MapPanel.TILEMAP_PATH)
         self.canvas = tk.Canvas(self)
         self.tkpicid = self.canvas.create_image(0, 0)
 
@@ -95,6 +96,8 @@ class MapPanel(tk.Frame):
             )
             for (x, y) in Tilemap.tilemaps[0].tiles:
                 self._SetTile(self.pic, (x, y), Tilemap.tilemaps[0].tiles[(x, y)])
+            for city in City.City.cities.values():
+                self._SetCity(self.pic, city)
 
         self.tkpic = ImageTk.PhotoImage(self.pic)
         # self.canvas.create_image(0,0,image = self.tkpic)
@@ -115,6 +118,16 @@ class MapPanel(tk.Frame):
                     image, coordXY, ArtDefine.tileArtDefines[feature.key].xy
                 )
 
+                
+    def _SetCity(self, image: Image.Image, city:City.City):
+        """Only called from the draw method
+
+        image: image to draw on\n
+        city: city to draw\n"""
+        self._SetSprite(image, city.pos, ArtDefine.tileArtDefines["CITY"].xy)
+        #self._BorderTile(image, city.pos, Civilization.Helper.getcivilization(city.owner).color)
+        self._BorderTile(image, city.pos, "#0000ff")
+
     def _SetSprite(
         self,
         image: Image.Image,
@@ -125,7 +138,7 @@ class MapPanel(tk.Frame):
         coordXY: tuple[int, int] worldspace position of the tile\n
         spriteIndex: tuple[int, int], left to right, top to bottom"""
 
-        tileImage = self.spriteSheet.crop(
+        tileImage = self.tileSpriteSheet.crop(
             (
                 MapPanel.TILE_SIZE * spriteIndex[0],
                 MapPanel.TILE_SIZE * spriteIndex[1],
@@ -146,6 +159,26 @@ class MapPanel(tk.Frame):
             ),
             mask=tileImage,
         )
+
+    def _BorderTile(
+        self,
+        image: Image.Image,
+        coordXY: "tuple[int,int]",
+        color
+        ):
+        """image: image to draw on\n
+        coordXY: tuple[int, int] worldspace position of the tile\n
+        color: '#112233', color of the border"""
+        drawer = ImageDraw.Draw(image)
+        x1 = (coordXY[0] * MapPanel.TILE_SIZE+1) * self.zoom
+        y1 = (coordXY[1] * MapPanel.TILE_SIZE+1) * self.zoom
+        x2 = ((coordXY[0]+1) * MapPanel.TILE_SIZE-1) * self.zoom
+        y2 = ((coordXY[1] +1)* MapPanel.TILE_SIZE-1) * self.zoom
+        drawer.line([(x1,y1),(x2,y1)],fill=color, width=self.zoom)
+        drawer.line([(x2,y2),(x2,y1)],fill=color, width=self.zoom)
+        drawer.line([(x2,y2),(x1,y2)],fill=color, width=self.zoom)
+        drawer.line([(x1,y1),(x1,y2)],fill=color, width=self.zoom)
+
 
     def _onClick(self, event):
         coords = (
