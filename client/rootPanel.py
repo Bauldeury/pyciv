@@ -27,6 +27,34 @@ class RootPanel(tk.Tk):
         self.columnconfigure(1, weight= 0, minsize=300)
         self.bind('<KeyPress>',self.onKeyPress)
 
+        #menubar
+        menubar = tk.Menu(self)
+        self.config(menu=menubar)
+
+        #menubar>>filemenu
+        file_menu = tk.Menu(menubar,tearoff=False)
+        def _cmdBindnew(): self.client.executeCmd("bindnew")
+        def _cmdUnbind(): self.client.executeCmd("unbind")
+        bindmenu = tk.Menu(file_menu,tearoff=False)
+        file_menu.add_cascade(label="Bind",menu=bindmenu,underline=0)
+        def _cmdQuit(): self.client.executeCmd("quit")
+        file_menu.add_command(label="Bindnew", command = _cmdBindnew)
+        file_menu.add_command(label="Unbind", command = _cmdUnbind)
+        file_menu.add_command(label="Quit", command = _cmdQuit)
+        menubar.add_cascade(label="File",menu=file_menu,underline=0)
+
+        #menubar>>filemenu>>bindmenu
+        def _cmdBind0(): self.client.executeCmd("bind 0")
+        def _cmdBind1(): self.client.executeCmd("bind 1")
+        def _cmdBind2(): self.client.executeCmd("bind 2")
+        def _cmdBind3(): self.client.executeCmd("bind 3")
+        def _cmdBind4(): self.client.executeCmd("bind 4")
+        bindmenu.add_command(label="Player#0", command = _cmdBind0)
+        bindmenu.add_command(label="Player#1", command = _cmdBind1)
+        bindmenu.add_command(label="Player#2", command = _cmdBind2)
+        bindmenu.add_command(label="Player#3", command = _cmdBind3)
+        bindmenu.add_command(label="Player#4", command = _cmdBind4)
+
         #root>>mainPanel
         self.mainPanel = tk.Frame(self)
         self.mainPanel.columnconfigure(0,weight= 1)
