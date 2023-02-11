@@ -57,7 +57,7 @@ class Helper():
         for i_civilization in _civilizations:
             _civilizations[i_civilization].startTurn()
             
-    def getcivilization(key_civilization):
+    def getcivilization(key_civilization:int)->Civilization:
         return _civilizations[key_civilization]
         
     def _areAllcivilizationTurnFinished():

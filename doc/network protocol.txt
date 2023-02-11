@@ -31,7 +31,7 @@ getupdate x: where x is an updateID. Will return all items which updateID is gre
     will return "returnupdate %:currentUpdateID ELEMENTS"
     ELEMENTS: space separated elements. Can be:
         (replace % by characters, end string with chr !)
-        tile: t[x%][y%][u:unexplored][o:fogofwar][t%:terrainID][f%,...,%!:featureID]
+        tile: t[x%][y%][u:unexplored][o:fogofwar][t%:terrainID][f%,...,%:featureID]
         unit: u[x%][y%][i%:id][o%:ownerid][t%:unittypeID]
         city: c[x%][y%][i%:id][o%:ownerid][n%!:name][p%:pop]
         event: (to be described)

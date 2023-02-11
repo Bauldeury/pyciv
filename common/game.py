@@ -5,7 +5,6 @@ print("|  __/   |  |  | |___  | |   \ \/ /  ")
 print("|_|      |__|   \____//___/   \__/   ")
 print()
 
-from msilib.schema import Feature
 from . import Player  
 
 from . import Civilization  
@@ -14,6 +13,7 @@ from . import City
 from . import Terrain
 from . import Feature
 from . import Unit
+from . import Common
 
 class Game:
 
@@ -59,6 +59,7 @@ class Game:
         
         self.turn += 1
         self._advanceYear()
+        Common.updateId += 1
         
         print("TURN {}: YEAR {}".format(self.turn,self.currentYear))
         Civilization.Helper.startTurn()
