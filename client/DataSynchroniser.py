@@ -48,7 +48,8 @@ class DataSynchroniser:
 
 
     def _updateTileFromString(self, string: str):
-        """reads and works out strings like this: t[x%][y%][u:unexplored][o:fogofwar][t%:terrainID][f%:featureID]"""
+        """reads information from strings like this: t[x%][y%][u:unexplored][o:fogofwar][t%:terrainID][f%:featureID1,2,3!]. 
+        Then update the according tile to the information."""
         args = Common.decomposeStrToArgs(
             string[1:], boolArgs=["u", "o"], intArgs=["x", "y", "t"], strArgs=["f"]
         )
