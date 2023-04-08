@@ -4,7 +4,6 @@ from common import Tile
 from common import Tilemap
 from common import Terrain
 from common import Feature
-from common import City
 from common import Common
 
 
@@ -29,12 +28,10 @@ class DataSynchroniser:
             for string in strings:
                 if string[0] == "t":
                     self._updateTileFromString(string)
-                elif string[0] == "c":
-                    self._updateCityFromString(string)
             
 
     def sendCmd(self, cmd: str):
-        self.client.executeCmd(cmd)
+        self.client.sendCmd(cmd)
 
     def _onBind(self, playerId: int):
         DataSynchroniser.playerId = playerId
@@ -51,7 +48,8 @@ class DataSynchroniser:
 
 
     def _updateTileFromString(self, string: str):
-        """reads and works out strings like this: t[x%][y%][u:unexplored][o:fogofwar][t%:terrainID][f%,...,%:featureID]"""
+        """reads information from strings like this: t[x%][y%][u:unexplored][o:fogofwar][t%:terrainID][f%:featureID1,2,3!]. 
+        Then update the according tile to the information."""
         args = Common.decomposeStrToArgs(
             string[1:], boolArgs=["u", "o"], intArgs=["x", "y", "t"], strArgs=["f"]
         )
@@ -64,17 +62,4 @@ class DataSynchroniser:
             for f in args["f"].split(","):
                 tile.features.append(Feature.Helper.intToFeature(int(f)))
 
-        if Tilemap.tilemaps[0].tiles[coord] != None:
-            del Tilemap.tilemaps[0].tiles[coord]
         Tilemap.tilemaps[0].tiles[coord] = tile
-
-    def _updateCityFromString(self, string: str):
-        """reads and works out strings like this: c[x%][y%][i%:id][o%:ownerid][n%!:name][p%:pop]"""
-        args = Common.decomposeStrToArgs(
-            string[1:], intArgs=['x','y','i','o','p'], strArgs=['n']
-        )
-
-        coord = (int(args['x']), int(args['y']))
-        city = City.City(coord,args['n'],int(args['o']),int(args['i']))
-        city.updateID = Common.updateId
-        city.population = int(args['p'])
